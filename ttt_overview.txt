@@ -1,0 +1,79 @@
+Feature: Player1 starts the game
+		Player1 starts the game
+			- welcome
+			- instructions
+			- board size
+			- opponent
+			- who goes first -- X goes first, but Player1 can defer to Player2
+	
+		Feature: Player1 chooses opponent Player2
+				Player1 can choose the opponent- Human, AI-easy, AI-hard
+	
+		Feature: Player1 choose board size
+				Player1
+	
+Feature: Player makes move
+ 		Player makes move. 
+ 
+ 		Scenario Outline: 
+ 			Given the board is "<board_state>"
+			When the player guesses "<square>"
+			And the result is "<result>"
+	
+		Scenarios: Empty board
+			| board	|	square | result |
+		  [0..8][]	  	   ([winner, no_winner, draw])
+								
+				Scenarios: FirstMove
+				
+			| board	|	square | result |
+		  [0..8][]			   ([winner, no_winner, draw])
+				
+				Scenarios: SecondMove
+			| board	|	square | result |
+		  [0..8][]			   ([winner, no_winner, draw])
+				
+				Scenarios: ThirdMove
+			| board	|	square | result |
+		  [0..8][]			   ([winner, no_winner, draw])
+			
+				Scenarios: FourthMove
+			| board	|	square | result |
+		  [0..8][]			   ([winner, no_winner, draw])
+
+				Scenarios: FifthMove
+			| board	|	square | result |
+		  [0..8][]			   ([winner, no_winner, draw])
+
+				Scenarios: SixthMove
+			| board	|	square | result |
+		  [0..8][]			   ([winner, no_winner, draw])
+
+				Scenarios: SeventhMove
+			| board	|	square | result |
+		  [0..8][]			   ([winner, no_winner, draw])
+
+				Scenarios: EightMove
+			| board	|	square | result |
+		  [0..8][]			   ([winner, no_winner, draw])
+
+				Scenarios: NinethMove
+			| board	|	square | result |
+		  [0..8][]			   ([winner, no_winner, draw])
+		
+		
+Feature: Player wins/loses the game
+	The result of the move is win, no_win, or draw.
+	
+Feature: AI- Hard
+
+Minimax
+  minimax
+  depth = 0
+  fill_space
+  game_over? 
+          scoreboard
+      minimax
+
+	
+	
