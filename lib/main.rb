@@ -3,7 +3,6 @@ require_relative 'display'
 require_relative 'player'
 require_relative 'output'
 require_relative 'board_setup'
-require 'pry'
 
 class Main
 
@@ -21,17 +20,12 @@ class Main
       current_board ||= board
       player1_turn?(move_count) ? player = player1 : player = player2 
       move = player.make_move
-     # binding.pry
-      #while current_board.valid_move?(move, current_board.board_spaces) == false
-       # Output.already_taken
-        #move = player.make_move
-      #end
       move_count += 1
       player.moves_played << move
       current_board.board_spaces.delete(move)
       Display.new.visual_board(player1.moves_played, player2.moves_played, player1.player_symbol, player2.player_symbol)
-      played_combos = played_combos(player.moves_played) 
-      played_combos.each{|combo| winner = true if winner?(combo, winning_combos )}
+      already_played = played_combos(player.moves_played) 
+      already_played.each{|combo| winner = true if winner?(combo, winning_combos )}
       current_board
     end
     puts "Game over."

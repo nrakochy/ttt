@@ -1,4 +1,5 @@
 require_relative 'cell'
+require 'pry'
 class Display
 
   
@@ -12,12 +13,14 @@ class Display
     space
   end
 
-  def visual_board player1_moves = [], player2_moves = [], player1_symbol = 'X', player2_symbol = 'O'
+  def visual_board player1_moves = [], player2_moves = [], player1_symbol = 'X', player2_symbol = 'O', height = 3, width = 3
     space = empty_board
     player1_moves.each{|move| space[move - 1].cell_symbol = player1_symbol}
     player2_moves.each{|move| space[move - 1].cell_symbol = player2_symbol}
     puts "  #{space[0].cell_symbol}  |  #{space[1].cell_symbol}  |  #{space[2].cell_symbol}  \n_____|_____|_____\n  #{space[3].cell_symbol}  |  #{space[4].cell_symbol}  |  #{space[5].cell_symbol}  \n_____|_____|_____\n  #{space[6].cell_symbol}  |  #{space[7].cell_symbol}  |  #{space[8].cell_symbol}  \n     |     |\n     "
   end
+  
+
   
 end
 
