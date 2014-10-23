@@ -23,8 +23,8 @@ class Display
 =end
 
   
-  def empty_board height = 3, length = 3
-    board_size = height * length
+  def empty_board height = 3, width = 3
+    board_size = height * width
     x = 0
     space = []
     while x < board_size
