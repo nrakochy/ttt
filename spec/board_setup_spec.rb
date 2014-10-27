@@ -2,7 +2,7 @@ require_relative '../lib/board_setup'
 
 describe BoardSetup do 
 
-  describe ".new_board" do
+  describe "#new_board" do
     it 'creates a board with 1..9 array by default for 3-in-a-row' do 
       expect(BoardSetup.new.new_board).to eq([1,2,3,4,5,6,7,8,9])
     end

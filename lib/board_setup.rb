@@ -1,4 +1,7 @@
-class BoardSetup
+require 'board'
+
+class BoardSetup 
+  include Board
 
   def new_board (height= 3, width = 3)
     board = []

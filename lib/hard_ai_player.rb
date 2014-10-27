@@ -1,4 +1,4 @@
-class EasyAIPlayer
+class HardAIPlayer
   attr_accessor :moves_played, :player_symbol 
 
   def initialize player_symbol, moves_played = []
@@ -8,6 +8,13 @@ class EasyAIPlayer
 
   def make_move board
     board.sample
+  end
+
+  def get_next_best_move
+  end
+
+  def minimax possible_moves
+
   end
 
 end

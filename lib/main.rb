@@ -5,6 +5,8 @@ require_relative 'human_player'
 require_relative 'easy_ai_player'
 require_relative 'output'
 require_relative 'board_setup'
+require_relative 'get_input'
+require 'pry'
 
 class Main
 
@@ -12,15 +14,19 @@ class Main
     player1 = HumanPlayer.new("X")
     mode_choice = customize_else_3_in_a_row
       if mode_choice  == 'CUSTOMIZE'
-        height_width_dimensions = GameConfig.new.choose_board_size
-        board_setup = BoardSetup.new.new_board(height_width_dimensions[0], height_width_dimensions[1])
-        winning_combos = BoardSetup.new.find_winning_combinations(dimensions[0], dimensions[1])
+        height = GameConfig.choose_board_size_height
+        width = GameConfig.choose_board_size_width
+        board_setup = BoardSetup.new.new_board(height, width)
+        winning_combos = BoardSetup.new.find_winning_combinations(height, width)
       else 
         board_setup = BoardSetup.new.new_board
         winning_combos = BoardSetup.new.find_winning_combinations
+        height = 3
+        width = 3
       end
 
     opponent = GameConfig.new.choose_opponent
+    binding.pry
       if opponent == "E"
         player2 = EasyAIPlayer.new('O')
       elsif opponent == "H"
@@ -30,7 +36,7 @@ class Main
       end
     spaces_available = board_setup.length
     board = Board.new(winning_combos, board_setup)
-    Display.new.visual_board(player1.moves_played, player2.moves_played, player1.player_symbol, player2.player_symbol)
+    print Display.new.visual_board(player1.moves_played, player2.moves_played, height, width, player1.player_symbol, player2.player_symbol)
     move_count = 0
     winner = false
     while move_count < spaces_available && winner == false
@@ -41,8 +47,8 @@ class Main
       move_count += 1
       player.moves_played << move
       current_board.board_spaces.delete(move)
-      Display.new.visual_board(player1.moves_played, player2.moves_played, player1.player_symbol, player2.player_symbol)
-      already_played = played_combos(player.moves_played) 
+      print Display.new.visual_board(player1.moves_played, player2.moves_played, height, width, player1.player_symbol, player2.player_symbol)
+      already_played = played_combos(player.moves_played, width) 
       already_played.each{|combo| winner = true if winner?(combo, winning_combos )}
       current_board
     end
@@ -58,13 +64,13 @@ class Main
     winning_combos.include?(player_move)
   end
 
-  def played_combos moves_played
-    moves_played.permutation(3).to_a
+  def played_combos(moves_played, width)
+    moves_played.permutation(width).to_a
   end
 
   def customize_else_3_in_a_row
-    Output.customize_board_or_choose_opponent
-    input = gets.chomp.upcase
+    Output.new.customize_board_or_choose_opponent
+    input = GetInput.new.user_input
     input == 'C' ? 'CUSTOMIZE' : input
   end 
 
