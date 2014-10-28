@@ -1,15 +1,16 @@
-require 'board'
+class GameRules
 
-class BoardSetup 
-  include Board
-
-  def new_board (height= 3, width = 3)
-    board = []
-    board_size = height *= width
-    board_size.times{|num| board << (num+1) }
-    board
-  end
+  def winner? player_moves, winning_combos, board_size = 3
+    player_combos = player_moves.combination(board_size).to_a
+    got_a_winner = false 
+    player_combos.each{|arr| got_a_winner = true if winning_combos.include?(arr)}
+    got_a_winner
+  end 
   
+  def loser? player_moves, board_size
+    winner?(player_moves, board_size)
+  end
+
   def find_winning_combinations(height = 3, width = 3)
     winning_combos = [] 
     winning_combos = find_winning_columns(height, width) + find_winning_rows(height, width) << find_winning_left_diagonal(height, width) <<  find_winning_right_diagonal(height, width)
@@ -32,7 +33,8 @@ class BoardSetup
   end
 
   def find_winning_rows(height = 3, width = 3)
-    board = new_board(height, width)
+    board_size = height * width
+    board = (1..board_size).to_a
     winning_rows = []
     while board.length > 0
       winning_rows << board.take(width)
@@ -60,5 +62,6 @@ class BoardSetup
     end
     winning_diagonal
   end
+
 
 end

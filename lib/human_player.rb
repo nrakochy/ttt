@@ -6,7 +6,7 @@ class HumanPlayer
     @player_symbol = player_symbol
   end 
 
-  def make_move board
+  def make_move board, player_moves_played = [], opponent_moves_played = []
     move = gets.chomp.to_i
     i = 0
     while invalid_move?(move, board) && i < 5

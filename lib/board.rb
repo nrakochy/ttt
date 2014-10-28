@@ -1,19 +1,16 @@
-module Board
+class Board 
+  attr_reader :board_spaces
 
-  def apply_move_to_board(board_spaces, player_move)
-    board_spaces.delete(player_move)
-    board_spaces
+  def new_board (height= 3, width = 3)
+    board = []
+    board_size = height * width
+    board_size.times{|num| board << (num+1) }
+    @board_spaces = board
   end
-
-  def winner? player_moves, winning_combos, board_size = 3
-    player_combos = player_moves.combination(board_size).to_a
-    got_a_winner = false 
-    player_combos.each{|arr| got_a_winner = true if winning_combos.include?(arr)}
-    got_a_winner
-  end 
   
-  def loser? player_moves, board_size
-    winner?(player_moves, board_size)
+  def apply_move_to_board(board_elements, player_move)
+    board_elements.delete(player_move)
+    board_elements
   end
   
   def all_moves_played (board_state, original_board)
@@ -23,6 +20,5 @@ module Board
   def valid_move? move, board_state
     board_state.include?(move)
   end
-
 
 end

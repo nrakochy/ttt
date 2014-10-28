@@ -1,7 +1,7 @@
 require_relative 'visual_rep'
-require 'pry'
 class Display
 
+  
   def empty_board height = 3, width = 3
     board_size = height * width
     x = 0

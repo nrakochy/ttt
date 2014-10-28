@@ -1,33 +1,36 @@
-require_relative 'output'
-require_relative 'get_input'
+require_relative 'io'
 
 class GameConfig
 
-  def initialize
-    @output = Output.new
-    @get_input = GetInput.new
+  def initialize io = BoardIO.new
+    @io = io
+  end
+
+  def customize_else_3_in_a_row
+    @io.customize_board_or_choose_opponent
+    input = @io.user_input.upcase
+    "CUSTOMIZE" if input == 'C'
   end
 
   def choose_opponent 
-    @output.choose_opponent
-    @get_input.user_input.upcase
+    @io.choose_opponent
+    @io.user_input.to_i
   end
 
-  def self.choose_board_size_height
-    @output.choose_board_size_height
-    input = @get_input.user_input
+  def choose_board_size_height
+    @io.board_size_height
+    @io.user_input.to_i
      #VALIDATE INPUT
   end
 
-  def self.choose_board_size_width
-    @output.choose_board_size_width
-    input = @get_input.user_input
-    #VALIDATE INPUT
+  def choose_board_size_width
+    @io.board_size_width
+    @io.user_input.to_i
   end
 
-  def self.player_symbol
-    @output.player_symbol
-    @get_input.user_input
+  def player_symbol
+    @io.player_symbol
+    @io.user_input
   end
 
 end
