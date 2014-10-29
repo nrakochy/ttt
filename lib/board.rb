@@ -1,5 +1,9 @@
 class Board 
-  attr_reader :board_spaces
+  attr_reader :board_spaces, :moves_played
+
+  def initialize moves_played = []
+    @moves_played = moves_played
+  end
 
   def new_board (height= 3, width = 3)
     board = []
@@ -8,9 +12,9 @@ class Board
     @board_spaces = board
   end
   
-  def apply_move_to_board(board_elements, player_move)
-    board_elements.delete(player_move)
-    board_elements
+  def apply_move_to_board(board_obj, player_move)
+    board_obj.delete(player_move)
+    board_obj
   end
   
   def all_moves_played (board_state, original_board)

@@ -1,18 +1,30 @@
+require 'pry'
 class HardAIPlayer
-  attr_reader :moves_played, :player_symbol 
-
-  def make_move board
-    board.sample
+  attr_reader :board, :moves_played, :player_symbol 
+  
+  def initialize game_rules, moves_played = [], player_symbol = 'O'
+    @rules = game_rules
+    @moves_played = moves_played
+    @player_symbol = player_symbol
   end
 
-  def get_next_best_move 
+  def winner? player_moves = self.moves_played, game_rules
+    @rules.winner?(player_moves, @rules.winning_combos)
+  end
+
+  def loser? player_moves = opponent.moves_played 
+    winner?(player_moves, @rules.winning_combos)
+  end
+
+  def make_move current_board
+    
+  end
+
+  def score_board_state(possible_board) 
+    winner?(possible_board, @rules.winning_combos) ? 10.0 : 0.0
   end
 
   def minimax possible_moves
   end
 
-  def check_for_win possible_moves, winning_combos, board_size = 3
-    possible_moves.each do |move|
-    end
-  end
 end

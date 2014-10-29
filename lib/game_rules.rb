@@ -1,4 +1,8 @@
 class GameRules
+  attr_reader :winning_combos
+
+  def initialize winning_combos = [] 
+  end
 
   def winner? player_moves, winning_combos, board_size = 3
     player_combos = player_moves.combination(board_size).to_a
@@ -12,9 +16,9 @@ class GameRules
   end
 
   def find_winning_combinations(height = 3, width = 3)
-    winning_combos = [] 
-    winning_combos = find_winning_columns(height, width) + find_winning_rows(height, width) << find_winning_left_diagonal(height, width) <<  find_winning_right_diagonal(height, width)
-    winning_combos
+    winners = [] 
+    winners = find_winning_columns(height, width) + find_winning_rows(height, width) << find_winning_left_diagonal(height, width) <<  find_winning_right_diagonal(height, width)
+    @winning_combos = winners
   end
   
   def find_winning_columns(height = 3, width = 3)

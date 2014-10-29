@@ -1,8 +1,8 @@
-require_relative 'io'
+require_relative 'temp_io'
 
 class GameConfig
 
-  def initialize io = BoardIO.new
+  def initialize io = TempIO.new
     @io = io
   end
 
