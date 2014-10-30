@@ -12,11 +12,13 @@ require 'pry'
 class Main
 
   def play_ttt
-    game_config  = GameConfig.new
     board = Board.new
     display = Display.new
     game_rules = GameRules.new
-    io = TempIO.new
+    board_io = BoardIO.new
+    io = Console.new(board_io)
+    game_config  = GameConfig.new(io)
+
     mode_choice = game_config.customize_else_3_in_a_row
       if mode_choice  == 'CUSTOMIZE'
         height = game_config.choose_board_size_height

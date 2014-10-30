@@ -1,36 +1,36 @@
-require_relative 'temp_io'
+require_relative 'console'
 
 class GameConfig
 
-  def initialize io = TempIO.new
-    @io = io
+  def initialize(console)
+    @console = console
   end
 
   def customize_else_3_in_a_row
-    @io.customize_board_or_choose_opponent
-    input = @io.user_input.upcase
+    @console.customize_board_or_choose_opponent
+    input = @console.user_input.upcase
     "CUSTOMIZE" if input == 'C'
   end
 
   def choose_opponent 
-    @io.choose_opponent
-    @io.user_input.to_i
+    @console.choose_opponent
+    @console.user_input.to_i
   end
 
   def choose_board_size_height
-    @io.board_size_height
-    @io.user_input.to_i
+    @console.board_size_height
+    @console.user_input.to_i
      #VALIDATE INPUT
   end
 
   def choose_board_size_width
-    @io.board_size_width
-    @io.user_input.to_i
+    @console.board_size_width
+    @console.user_input.to_i
   end
 
   def player_symbol
-    @io.player_symbol
-    @io.user_input
+    @console.player_symbol
+    @console.user_input
   end
 
 end

@@ -1,17 +1,16 @@
 class FakeIO
+  attr_accessor :input, :output
 
-  def gets(input_stream = $stdin)
-    input_stream.chomp
+  def initialize 
+    @input = []
+    @output = []
   end
 
-  def print(input_stream = $stdout)
-    input_stream.chomp
+  def get_input 
+    input.shift
   end
 
-  def set_next_get
+  def print_output(output_line)
+    output << output_line
   end
-
-  def set_last_print
-  end
-
 end

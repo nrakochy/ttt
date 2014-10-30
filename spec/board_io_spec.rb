@@ -1,14 +1,16 @@
 require_relative '../lib/board_io'
-require 'stringio'
+require_relative '../lib/fake_io'
 
 describe BoardIO do
+  let(:io) { FakeIO.new }
+
   it 'gets input from the user' do
-    test = StringIO.new("test")
-    expect(BoardIO.new.get_input(test)).to eq("test")
+    io.input << "test"
+    expect(io.get_input).to eq("test")
   end
 
   it 'prints output to the console' do
-    fake = StringIO.new
-    expect(BoardIO.new.print_output("test", fake)).to eq("test")
+    test = "test"
+    expect(io.print_output(test)).to eq(["test"])
   end
 end

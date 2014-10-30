@@ -1,11 +1,23 @@
 class BoardIO
 
-  def get_input(input_stream = $stdin)
-    input_stream.gets
+  def initialize(input = $stdin, output = $stdout)
+    @input = input
+    @output = output
   end
 
-  def print_output(output, output_stream = $stdout)
-    output_stream.print(output)
+  def get_input
+    @input.gets
+  end
+
+  def print_output(output) 
+    @output.print(output)
   end
 
 end
+=begin
+Main 
+
+io = BoardIO.new
+messages = BoardMessages.new(io)
+
+=end

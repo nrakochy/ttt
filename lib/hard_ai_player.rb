@@ -2,13 +2,13 @@ require 'pry'
 class HardAIPlayer
   attr_reader :board, :moves_played, :player_symbol 
   
-  def initialize game_rules, moves_played = [], player_symbol = 'O'
+  def initialize(game_rules, moves_played = [], player_symbol = 'O')
     @rules = game_rules
     @moves_played = moves_played
     @player_symbol = player_symbol
   end
 
-  def winner? player_moves = self.moves_played, game_rules
+  def winner?(player_moves = self.moves_played)
     @rules.winner?(player_moves, @rules.winning_combos)
   end
 
