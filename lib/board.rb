@@ -1,8 +1,8 @@
 class Board 
-  attr_reader :board_spaces, :moves_played
+  attr_reader :board_spaces, :all_moves_played
 
-  def initialize moves_played = []
-    @moves_played = moves_played
+  def initialize all_moves_played = []
+    @all_moves_played = all_moves_played
   end
 
   def new_board (height= 3, width = 3)
@@ -17,7 +17,7 @@ class Board
     board_obj
   end
   
-  def all_moves_played (board_state, original_board)
+  def remove_from_board (board_state, original_board)
     original_board.delete_if{|num| board_state.include?(num)}
   end
 

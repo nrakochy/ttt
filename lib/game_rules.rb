@@ -1,13 +1,14 @@
 class GameRules
-  attr_reader :winning_combos
+  attr_reader :winning_combos, :game_size
 
-  def initialize winning_combos = [] 
+  def initialize winning_combos = [], game_size = 9 
+    @game_size = game_size
   end
 
-  def winner? player_moves, winning_combos, board_size = 3
+  def winner? player_moves, winners, board_size = 3 
     player_combos = player_moves.combination(board_size).to_a
     got_a_winner = false 
-    player_combos.each{|arr| got_a_winner = true if winning_combos.include?(arr)}
+    player_combos.each{|arr| got_a_winner = true if winners.include?(arr)}
     got_a_winner
   end 
   

@@ -53,16 +53,16 @@ class Main
       else 
         player = player2 
         opponent = player1
-      end
-      move = player.make_move(current_board, player.moves_played, opponent.moves_played)
+      end 
+      move = player.make_move(current_board)
       io.move_choice(move)
       move_count += 1
       player.moves_played << move
       current_board.board_spaces.delete(move)
-      current_board.moves_played << move
+      current_board.all_moves_played << move
       print display.visual_board(player1.moves_played, player2.moves_played, height, width, player1.player_symbol, player2.player_symbol)
       already_played = played_combos(player.moves_played, width) 
-      already_played.each{|combo| winner = true if winner?(combo, winning_combos )}
+      already_played.each{|combo| winner = true if winner?(combo, game_rules.winning_combos)}
       current_board
     end
     puts "Game over."
