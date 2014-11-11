@@ -9,8 +9,8 @@ class BoardIO
     @input.gets
   end
 
-  def print_output(output) 
-    @output.print(output)
+  def print_output(output)
+    @output.puts(output)
   end
 
 end

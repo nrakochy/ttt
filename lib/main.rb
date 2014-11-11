@@ -12,9 +12,7 @@ require 'pry'
 class Main
 
   def play_ttt
-    board = Board.new
     display = Display.new
-    game_rules = GameRules.new
     board_io = BoardIO.new
     io = Console.new(board_io)
     game_config  = GameConfig.new(io)
@@ -23,45 +21,46 @@ class Main
       if mode_choice  == 'CUSTOMIZE'
         height = game_config.choose_board_size_height
         width = game_config.choose_board_size_width
-        board_setup = board.new_board(height, width)
-        game_rules.find_winning_combinations(height, width)
+        board = Board.new.new_board(height,width)
+        board_setup = board.available_spaces.length
+        binding.pry
+        game_rules = GameRules.new(height, width)
       else 
-        board_setup = board.new_board
+        board = Board.new
+        board_setup = board.available_spaces.length
         height = 3
         width = 3
-        game_rules.find_winning_combinations(height, width)
+        game_rules = GameRules.new
       end
 
-    player1 = HumanPlayer.new(game_rules)
+    player1 = HumanPlayer.new(game_rules, board)
     opponent = game_config.choose_opponent
       if opponent == 1
-        player2 = EasyAIPlayer.new(game_rules)
+        player2 = EasyAIPlayer.new(game_rules, board)
       elsif opponent == 2
-        player2 = HardAIPlayer.new(game_rules)
+        player2 = HardAIPlayer.new(game_rules, board)
       else 
-        player2 = HumanPlayer.new(game_rules)
+        player2 = HumanPlayer.new(game_rules, board, 'O')
       end
-    spaces_available = board_setup.length
-    print display.visual_board(player1.moves_played, player2.moves_played, height, width, player1.player_symbol, player2.player_symbol)
+    spaces_available = board_setup
+    print display.visual_board(board.player1_already_played, board.player2_already_played, height, width, player1.player_symbol, player2.player_symbol)
     move_count = 0
     winner = false
     while move_count < spaces_available && winner == false
       current_board ||= board
-      if player1_turn?(move_count) 
-        player = player1 
-        opponent = player2
-      else 
-        player = player2 
-        opponent = player1
-      end 
+      if player1_turn?(move_count)  
+        player = player1
+        player_moves = board.player1_already_played
+      else  
+        player = player2
+        player_moves = board.player2_already_played
+      end
       move = player.make_move(current_board)
       io.move_choice(move)
       move_count += 1
-      player.moves_played << move
-      current_board.board_spaces.delete(move)
-      current_board.all_moves_played << move
-      print display.visual_board(player1.moves_played, player2.moves_played, height, width, player1.player_symbol, player2.player_symbol)
-      already_played = played_combos(player.moves_played, width) 
+      current_board.apply_move_to_board(move, player_moves)
+      print display.visual_board(board.player1_already_played, board.player2_already_played, height, width, player1.player_symbol, player2.player_symbol)
+      already_played = played_combos(player_moves, width) 
       already_played.each{|combo| winner = true if winner?(combo, game_rules.winning_combos)}
       current_board
     end
@@ -77,10 +76,6 @@ class Main
     winning_combos.include?(player_move)
   end
   
-  def loser? player_move, winning_combos
-    winner?(player_move, winning_combos)
-  end
-
   def played_combos(moves_played, width)
     moves_played.permutation(width).to_a
   end

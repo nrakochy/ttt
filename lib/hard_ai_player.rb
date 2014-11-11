@@ -1,66 +1,52 @@
 require 'pry'
 class HardAIPlayer
-  attr_reader :player_symbol, :moves_played 
+  attr_reader :player_symbol
   
-  def initialize(game_rules, moves_played = [], opponent_moves_played = [],  player_symbol = 'O')
+  def initialize(game_rules, current_board, player_symbol = 'O')
     @rules = game_rules
-    @moves_played = moves_played
-    @opponent_moves_played = opponent_moves_played
     @player_symbol = player_symbol
+    @current_board = current_board
   end
 
   def make_move current_board
-    available_moves_with_score = evaluate_each_available_move(current_board)
-    get_next_best_move(available_moves_with_score)
+    copy_board = clone_board(@current_board)
   end
 
-  def get_next_best_move(available_moves_with_score)
-   best_move = available_moves_with_score.max_by{|move, move_score| move_score } 
-   best_move[0]
-  end
-
-  def evaluate_each_available_move board
-    scores = Hash.new
-    current_board = board.board_spaces
-    current_board.each do |move|
-      potential_player_move = @moves_played << move
-      current_board.delete(move)
-      scores[move] = minimax(current_board, potential_player_move)
-      @moves_played.delete(move)
-      scores
-    end
+  def create_scores_for_each_available_move(copied_board, scores = {})
+    copied_board.available_spaces.each{|move| scores[move] = negamax(copied_board) }
     scores
   end
 
-  def minimax(current_board, possible_player_board, depth = 0, score = 100)
-    if game_over?(current_board, possible_player_board)
-      score = score_board_state(possible_player_board)
+  def negamax(board, depth= 1, player_turn = 1)
+    score = -999
+    if game_over?(board)
+      return score_board_state(board, player_turn)
     else
-      current_board.each do |move|
-        cloned_board = clone_board(current_board)
-        depth += 1
-        possible_player_board = whose_turn_to_check_possible_move(depth) << cloned_board.delete(move)
-        minimax_score = minimax(cloned_board, possible_player_board, depth, score)
-        #BROKEN RIGHT HERE- DEPTH IS NOT BEING RETURNED AND PASSED TO SCORE_OF_MOVE FOR ACCURATE SCORE
-        node_score = score_of_move_based_on_whose_turn_it_is(minimax_score, depth)
-        score = node_score if node_score <= score
+      board.available_spaces.each do |move|
+        if depth.odd?
+          board.apply_move_to_board(move, board.player2_already_played)
+        else
+          board.apply_move_to_board(move, board.player1_already_played)
+        end
+        negamax_result = -negamax(board, depth + 1, -player_turn)
+        score = [score, negamax_result].max
+        depth = 1
+        board = @current_board
       end
     end
     score
   end
 
-  def whose_turn_to_check_possible_move(depth)
-    moves_played_elements = @moves_played.dup
-    opponent_played_elements = @opponent_moves_played.dup
-    depth.even? ? moves_played_elements : opponent_played_elements
+  def score_board_state(board_obj, player_turn)
+    if winner?(board_obj.player1_already_played) || winner?(board_obj.player2_already_played)
+      10.0 * player_turn
+    else
+      0.0
+    end
   end
 
-  def score_board_state(player_board, depth = 0)
-    winner?(player_board) ? 10.0 : 0.0
-  end
-
-  def game_over?(board_state, player_moves = [])
-    tie?(board_state) || winner?(player_moves) 
+  def game_over?(board_obj)
+    tie?(board_obj.available_spaces) || winner?(board_obj.player1_already_played) || winner?(board_obj.player2_already_played)
   end
 
   def tie?(board_state)
@@ -70,17 +56,8 @@ class HardAIPlayer
   def winner? board_state
     @rules.winner?(board_state, @rules.winning_combos)
   end
-
-  def score_of_move_based_on_whose_turn_it_is(score, depth)
-    return 0.0 if score_is_zero?(score)
-    depth.odd? ? -score : (score)
-  end
-
-  def score_is_zero?(score)
-    score == 0
-  end
-
-  def clone_board(board)
+  
+  def clone_board board
     board.clone
   end
 

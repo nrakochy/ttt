@@ -1,4 +1,3 @@
-require 'pry'
 class Console
 
   def initialize io

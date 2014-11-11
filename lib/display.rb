@@ -1,4 +1,5 @@
 require_relative 'visual_rep'
+require 'pry'
 class Display
 
   

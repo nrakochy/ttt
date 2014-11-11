@@ -1,143 +1,147 @@
 require_relative '../lib/hard_ai_player'
 require_relative '../lib/game_rules'
+require_relative '../lib/board'
+require 'pry'
 
 describe HardAIPlayer do
-
   let(:rules){ GameRules.new }
+  let(:hard_ai){ HardAIPlayer.new(rules,@board)}
+
 
   it 'initializes a Player Object with a symbol attribute' do
-    new_player = HardAIPlayer.new(rules)
-    expect(new_player.player_symbol).to eq('O')
+    expect(hard_ai.player_symbol).to eq('O')
   end
 
-  it 'initializes a Player Object with an empty moves_played attribute' do
-    new_player = HardAIPlayer.new(rules)
-    expect(new_player.moves_played).to eq([])
-  end
+  describe 'negamax helper methods' do
+    before :each do 
+        available_spaces = [2,8]
+        already_been_taken = [1,3,4,5,6,7,9]
+        @board = Board.new(available_spaces, already_been_taken) 
+      end
 
-  context '3x3 board' do
+   context '3x3 board' do
     describe '#winner?' do
       it 'returns true if player_moves includes winning combination' do
         moves_played = [1,2,3]
-        rules.find_winning_combinations
-        new_player = HardAIPlayer.new(rules, moves_played)
-        expect(new_player.winner?(moves_played)).to eq(true)
+        @board.player1_already_played = moves_played
+        expect(hard_ai.winner?(@board.player1_already_played)).to eq(true)
       end
 
       it 'returns false if player_moves does not include winning combination' do
         moves_played = [2,3,4]
-        rules.find_winning_combinations
-        new_player = HardAIPlayer.new(rules, moves_played)
-        expect(new_player.winner?(moves_played)).to eq(false)
+        @board.player1_already_played = moves_played
+        expect(hard_ai.winner?(moves_played)).to eq(false)
       end
     end
 
     describe '#score_board_state' do
       it 'returns 10.0 if possible move results in win for the player' do
-        possible_board = [1,2,3]
-        rules.find_winning_combinations
-        new_player = HardAIPlayer.new(rules)
-        expect(new_player.score_board_state(possible_board, 1)).to eq(10.0)
+        @board.player2_already_played = [1,2,3]
+        player_turn = 1
+        expect(hard_ai.score_board_state(@board, player_turn)).to eq(10.0)
+
       end
 
       it 'returns 0.0 if possible move is not a winning move' do
         possible_board = [2,3,4]
-        rules.find_winning_combinations
-        new_player = HardAIPlayer.new(rules)
-        expect(new_player.score_board_state(possible_board)).to eq(0.0)
+        depth = 0
+        expect(hard_ai.score_board_state()).to eq(0.0)
       end
     end
 
     describe '#tie?' do
-      it 'returns true if there are no moves left and there is no winning move' do
+      it 'returns true if there are no moves left' do 
         possible_moves = []
-        rules.find_winning_combinations
-        new_player = HardAIPlayer.new(rules)
-        expect(new_player.tie?(possible_moves)).to eq(true)
+        expect(hard_ai.tie?(possible_moves)).to eq(true)
       end
 
       it 'returns false if there are remaining moves in the Board to be played' do
-        possible_moves = [1,2]
-        rules.find_winning_combinations
-        new_player = HardAIPlayer.new(rules)
-        expect(new_player.tie?(possible_moves)).to eq(false)
+        available_spaces = [1,2]
+        expect(hard_ai.tie?(available_spaces)).to eq(false)
       end
     end
 
     describe '#game_over' do
       it 'returns true if game ends in a tie ' do
         board = []
-        expect(HardAIPlayer.new(rules).game_over?(board)).to eq(true)
+        current_player = []
+        expect(hard_ai.game_over?(board, current_player)).to eq(true)
       end
 
       it 'returns true if player moves contains a winnning combination' do
         moves_played = [1,2,3]
         board = [7,8]
-        rules.find_winning_combinations
-        new_player = HardAIPlayer.new(rules, moves_played)
-        expect(new_player.game_over?(board, moves_played)).to eq(true)
+        expect(hard_ai.game_over?(board, moves_played)).to eq(true)
       end
     end
 
-    describe '#minimax' do
-      context '1 remaining move, opponent turn to move' do
-        it 'returns the value of 0.0 for last remaining possible move which ends in a tie for the opponent and a win for the player' do
-          current_board = [6]
-          moves_played = [3,4,5]
-          opponent_moves = [1]
-          rules.find_winning_combinations
-          new_player = HardAIPlayer.new(rules, moves_played, opponent_moves)
-          expect(new_player.minimax(current_board, moves_played)).to eq( 0.0 )
+    describe '#create_scores_for_each_available_move' do
+      context '2 remaining moves' do
+        it 'returns a scores hash with available_moves for each key and their score as determined by negamax for the value' do
+          available_spaces = [8,6]
+          player2 = [5,7]
+          player1 = [1,3,4,7,9]
+          already_been_taken = player1 + player2
+          board_state = Board.new(available_spaces, already_been_taken, player1, player2)
+          ai = HardAIPlayer.new(rules, board_state)
+          expect(ai.create_scores_for_each_available_move(board_state)).to eq( { 8 => 10.0, 6 => 0.0} )
         end
+      end
+    end
+   end
 
-        it 'returns the value of -10.0 for last remaining possible move which results in victory for opponent' do
-          current_board = [3]
-          moves_played = [9,4,5]
-          opponent_moves = [1,2,7]
-          rules.find_winning_combinations
-          new_player = HardAIPlayer.new(rules, moves_played, opponent_moves)
-          expect(new_player.minimax(current_board, moves_played)).to eq( -10.0 )
+    describe '#negamax' do
+      context '1 remaining move' do
+        it 'returns 0.0 for the last available space' do
+          available_spaces = [2]
+          player2 = [3,4,5,8]
+          player1 = [1,6,7,9]
+          already_been_taken = player1 + player2
+          board_state = Board.new(available_spaces, already_been_taken, player1, player2)
+          ai = HardAIPlayer.new(rules, board_state)
+          expect(ai.negamax(board_state)).to eq( 0.0 )
         end
       end
 
-      context '2 remaining moves, opponent turn to move' do
-        it 'returns a value of -10 as value for fork in which opponent will win at either move' do
-          current_board = [8,9]
-          moves_played = [3,4,6]
-          opponent_moves = [1,2,5]
-          rules.find_winning_combinations
-          new_player = HardAIPlayer.new(rules, moves_played, opponent_moves)
-          expect(new_player.minimax(current_board, moves_played)).to eq( -10.0 )
+      context '2 remaining moves' do
+        it 'returns 0.0 for the two remaining moves' do
+          available_spaces = [2,8]
+          player2 = [3,4,5]
+          player1 = [1,6,7,9]
+          already_been_taken = player1 + player2
+          board_state = Board.new(available_spaces, already_been_taken, player1, player2)
+          expect(hard_ai.negamax(board_state)).to eq( 0.0 )
         end
 
-        it 'returns the value of 0 for the two remaining moves, one of which ends in a loss for the opponent and one ends in a tie for the opponent' do
-          current_board = [6,3]
-          moves_played = [1,2]
-          opponent_moves = [5]
-          rules.find_winning_combinations
-          new_player = HardAIPlayer.new(rules, moves_played, opponent_moves)
-          expect(new_player.minimax(current_board, moves_played)).to eq( 0.0 )
+        it 'returns 10.0 for the two remaining moves, starting with 6, resulting in win for current_player turn' do
+          available_spaces = [6,8]
+          player2 = [3,4,9]
+          player1 = [1,2,5,7]
+          already_been_taken = player1 + player2
+          board_state = Board.new(available_spaces, already_been_taken, player1, player2)
+          expect(hard_ai.negamax(board_state)).to eq( 10.0 )
+        end
+
+        it 'returns 0.0 for the two remaining moves, starting with 8, resulting in tie' do
+          available_spaces = [8,6]
+          player2 = [3,4,9]
+          player1 = [1,2,5,7]
+          already_been_taken = player1 + player2
+          board_state = Board.new(available_spaces, already_been_taken, player1, player2)
+          expect(hard_ai.negamax(board_state)).to eq( 0.0 )
+        end
+
+        it 'returns 10.0 for the two remaining moves, starting with 8, resulting in loss for the current_player' do
+          available_spaces = [8,6]
+          player2 = [5,7]
+          player1 = [1,3,4,7,9]
+          already_been_taken = player1 + player2
+          board_state = Board.new(available_spaces, already_been_taken, player1, player2)
+          expect(hard_ai.negamax(board_state)).to eq( 10.0 )
         end
       end
 
-      context '3 remaining moves, opponent turn to move' do
-        it 'returns a value of 0.0 for remaining possible moves which include player victory, expecting opponent block' do
-          current_board = [7,5,9]
-          moves_played = [4,6]
-          opponent_moves = [1]
-          rules.find_winning_combinations
-          new_player = HardAIPlayer.new(rules, moves_played, opponent_moves)
-          expect(new_player.minimax(current_board, moves_played)).to eq( 0.0 )
-        end
-
-      it 'returns a value of 10.0 as value for possible move that contains a win down the tree, expecting opponent block' do
-        current_board = [6,7,8]
-        moves_played = [1,2,3]
-        opponent_moves = [4,5,9]
-        rules.find_winning_combinations
-        new_player = HardAIPlayer.new(rules, moves_played, opponent_moves)
-        expect(new_player.minimax(current_board, moves_played)).to eq( 10.0 )
-      end
+      context '3 remaining moves' do
       end
     end
   end
