@@ -17,9 +17,10 @@ class HardAIPlayer
     moves_to_check = copied_board.available_spaces
     moves_to_check.each do |move|
       copied_board.apply_move_to_board(move, copied_board.player2_already_played)
-      @modified_board = copied_board
+      @modified_board = copied_board.freeze.clone
       scores[move] = negamax(copied_board) 
       copied_board.undo_move([move])
+      copied_board
     end
     scores
   end
@@ -33,10 +34,11 @@ class HardAIPlayer
       else
         board.apply_move_to_board(move, board.player1_already_played)
       end
-      negamax_result = negamax(board, depth + 1, -player_turn)
-      score = [score, -negamax_result].max
+      negamax_result = -negamax(board, depth + 1, -player_turn)
+      score = [score, negamax_result].max
       depth = 1
       board = @modified_board
+      score
     end
     score
   end
