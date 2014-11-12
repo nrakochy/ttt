@@ -24,7 +24,7 @@ class HardAIPlayer
     scores
   end
 
-  def negamax(board, depth= 0, player_turn = 1)
+  def negamax(board, depth= 1, player_turn = 1)
     return score_board_state(board, player_turn) if game_over?(board)
     score = -9999
     board.available_spaces.each do |move|
@@ -33,8 +33,8 @@ class HardAIPlayer
       else
         board.apply_move_to_board(move, board.player1_already_played)
       end
-      negamax_result = -negamax(board, depth + 1, -player_turn)
-      score = [score, negamax_result].max
+      negamax_result = negamax(board, depth + 1, -player_turn)
+      score = [score, -negamax_result].max
       depth = 1
       board = @modified_board
     end

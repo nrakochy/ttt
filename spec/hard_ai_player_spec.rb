@@ -97,7 +97,7 @@ describe HardAIPlayer do
 
     describe '#negamax' do
       context '1 remaining move' do
-        it 'returns 0.0 for the last available space' do
+        it 'returns 0.0 for the last available space which does not result in a win' do
           available_spaces = [2]
           player2 = [3,4,5,8]
           player1 = [1,6,7,9]
@@ -109,7 +109,7 @@ describe HardAIPlayer do
       end
 
       context '2 remaining moves' do
-        it 'returns 0.0 for the two remaining moves' do
+        it 'returns 0.0 for the two remaining moves, both resulting in tie' do
           available_spaces = [2,8]
           player2 = [3,4,5]
           player1 = [1,6,7,9]
@@ -118,8 +118,8 @@ describe HardAIPlayer do
           expect(hard_ai.negamax(board_state)).to eq( 0.0 )
         end
 
-        it 'returns 10.0 for the two remaining moves, starting with 6, resulting in win for current_player turn' do
-          available_spaces = [6,8]
+        it 'returns 10.0 for the two remaining moves with 6, resulting in win for current_player turn' do
+          available_spaces = [8,6]
           player2 = [3,4,9]
           player1 = [1,2,5,7]
           already_been_taken = player1 + player2
@@ -127,26 +127,14 @@ describe HardAIPlayer do
           expect(hard_ai.negamax(board_state)).to eq( 10.0 )
         end
 
-        it 'returns 0.0 for the two remaining moves, starting with 8, resulting in tie' do
-          available_spaces = [8,6]
-          player2 = [3,4,9]
-          player1 = [1,2,5,7]
-          already_been_taken = player1 + player2
-          board_state = Board.new(available_spaces, already_been_taken, player1, player2)
-          expect(hard_ai.negamax(board_state)).to eq( 0.0 )
-        end
-
-        it 'returns 10.0 for the two remaining moves, starting with 8, resulting in loss for the current_player' do
+        it 'returns -10.0 for the two remaining moves, resulting in loss for the current_player' do
           available_spaces = [8,6]
           player2 = [5,7]
           player1 = [1,3,4,7,9]
           already_been_taken = player1 + player2
           board_state = Board.new(available_spaces, already_been_taken, player1, player2)
-          expect(hard_ai.negamax(board_state)).to eq( 10.0 )
+          expect(hard_ai.negamax(board_state)).to eq( -10.0 )
         end
-      end
-
-      context '3 remaining moves' do
       end
     end
   end
