@@ -1,38 +1,42 @@
 require 'pry'
 class HardAIPlayer
-  attr_reader :player_symbol
+  attr_reader :player_symbol, :current_board
   
-  def initialize(game_rules, current_board, player_symbol = 'O')
+  def initialize(game_rules, current_board, modified_board = [], player_symbol = 'O')
     @rules = game_rules
     @player_symbol = player_symbol
-    @current_board = current_board
+    @current_board = current_board.clone
+    @modified_board = modified_board
   end
 
-  def make_move current_board
-    copy_board = clone_board(@current_board)
+  def make_move board
+    
   end
 
   def create_scores_for_each_available_move(copied_board, scores = {})
-    copied_board.available_spaces.each{|move| scores[move] = negamax(copied_board) }
+    moves_to_check = copied_board.available_spaces
+    moves_to_check.each do |move|
+      copied_board.apply_move_to_board(move, copied_board.player2_already_played)
+      @modified_board = copied_board
+      scores[move] = negamax(copied_board) 
+      copied_board.undo_move([move])
+    end
     scores
   end
 
-  def negamax(board, depth= 1, player_turn = 1)
-    score = -999
-    if game_over?(board)
-      return score_board_state(board, player_turn)
-    else
-      board.available_spaces.each do |move|
-        if depth.odd?
-          board.apply_move_to_board(move, board.player2_already_played)
-        else
-          board.apply_move_to_board(move, board.player1_already_played)
-        end
-        negamax_result = -negamax(board, depth + 1, -player_turn)
-        score = [score, negamax_result].max
-        depth = 1
-        board = @current_board
+  def negamax(board, depth= 0, player_turn = 1)
+    return score_board_state(board, player_turn) if game_over?(board)
+    score = -9999
+    board.available_spaces.each do |move|
+      if depth.odd?
+        board.apply_move_to_board(move, board.player2_already_played)
+      else
+        board.apply_move_to_board(move, board.player1_already_played)
       end
+      negamax_result = -negamax(board, depth + 1, -player_turn)
+      score = [score, negamax_result].max
+      depth = 1
+      board = @modified_board
     end
     score
   end

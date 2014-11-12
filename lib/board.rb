@@ -9,7 +9,7 @@ class Board
     @player2_already_played = player2_already_played
   end
 
-  def new_board(height= 3, width = 3)
+  def new_board (height= 3, width = 3)
     board = []
     board_size = height * width
     board_size.times{|num| board << (num+1) }
@@ -34,8 +34,8 @@ class Board
     board_state.include?(move)
   end
 
-  def undo_move(moves_made_on_board)
-    moves_made_on_board.each do |move|
+  def undo_move(moves_to_reset)
+    moves_to_reset.each do |move|
       player1_already_played.delete(move) if player1_already_played.include?(move)
       player2_already_played.delete(move) if player2_already_played.include?(move)
       available_spaces << all_moves_played.delete(move)
