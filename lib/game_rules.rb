@@ -2,30 +2,25 @@ class GameRules
   attr_reader :winning_combos, :game_size
 
   def initialize height = 3, width = 3, board_size = 3
-    @game_size = game_size
     @winning_combos = find_winning_combinations(height, width)
   end
 
-  def winner? player_moves, winners, board_size = 3 
+  def winner? player_moves, winners, board_size = 3
     player_combos = player_moves.combination(board_size).to_a
     got_a_winner = false 
     player_combos.each{|arr| got_a_winner = true if winners.include?(arr)}
     got_a_winner
-  end 
-  
-  def loser? player_moves, board_size
-    winner?(player_moves, board_size)
   end
 
   def find_winning_combinations(height = 3, width = 3)
-    winners = [] 
+    winners = []
     winners = find_winning_columns(height, width) + find_winning_rows(height, width) << find_winning_left_diagonal(height, width) <<  find_winning_right_diagonal(height, width)
     winners
   end
   
   def find_winning_columns(height = 3, width = 3)
     winning_columns = []
-    columns = 1.upto(width).to_a
+    columns = 0.upto(width-1).to_a
     col_arr = []
     columns.map do |column|
       while  col_arr.length < height
@@ -40,7 +35,7 @@ class GameRules
 
   def find_winning_rows(height = 3, width = 3)
     board_size = height * width
-    board = (1..board_size).to_a
+    board = (0..board_size-1).to_a
     winning_rows = []
     while board.length > 0
       winning_rows << board.take(width)
@@ -51,7 +46,7 @@ class GameRules
 
   def find_winning_left_diagonal(height = 3, width = 3)
     winning_diagonal = []
-    corner = 1
+    corner = 0
     while winning_diagonal.length < height
       winning_diagonal << corner
       corner += (width + 1)
@@ -61,7 +56,7 @@ class GameRules
 
   def find_winning_right_diagonal(height = 3, width = 3)
     winning_diagonal = []
-    corner = width
+    corner = width - 1
     while winning_diagonal.length < height
       winning_diagonal << corner
       corner += (width - 1)

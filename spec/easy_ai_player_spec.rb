@@ -3,13 +3,18 @@ require_relative '../lib/easy_ai_player'
 describe EasyAIPlayer do
   
   it 'initializes a Player Object with a symbol attribute' do
-    new_player = EasyAIPlayer.new('X')
+    rules = []
+    board = []
+    new_player = EasyAIPlayer.new(rules, board, 'X')
     expect(new_player.player_symbol).to eq('X')
   end
 
-  it 'initializes a Player Object with an empty moves_played attribute' do
-    new_player = EasyAIPlayer.new('X')
-    expect(new_player.moves_played).to eq([])
+  describe '#make_move' do
+    it 'returns only integers from board' do
+      move_spaces = [1, "2"]
+      new_player = EasyAIPlayer.new([], move_spaces)
+      expect(new_player.make_move).to eq(1)
+    end
   end
 
 end

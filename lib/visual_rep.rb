@@ -4,5 +4,4 @@ class VisualRep
   def initialize visual_symbol
     @visual_symbol = visual_symbol
   end
-         
 end

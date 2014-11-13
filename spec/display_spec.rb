@@ -1,51 +1,29 @@
 require_relative '../lib/display'
 
 describe Display do
-  describe '#empty board' do
+  let(:board3x3){ (1..9).to_a }
+  let(:board4x4){ (1..16).to_a }
+  let(:display3_board){ Display.new.board_to_display(board3x3) }
+  let(:display4_board){ Display.new.board_to_display(board4x4) }
+
+  describe '#board_to_display ' do
     context '3x3 board' do
       it 'creates a 3x3 board by default' do
-        expect(Display.new.empty_board.length).to eq(9)
+        expect(display3_board.length).to eq(9)
       end
       
       it 'returns an Array' do
-        expect(Display.new.empty_board.class).to eq(Array)
+        expect(display3_board.class).to eq(Array)
       end
 
       it 'returns an array of VisualRep objects' do
-        board = Display.new.empty_board
-        expect(board[0].class).to eq(VisualRep)
+        expect(display3_board[0].class).to eq(VisualRep)
       end
     end
 
-    context 'various board sizes' do
+    context '4x4 board' do
       it 'returns a board that is able to take a 4x4 square' do
-        expect(Display.new.empty_board(4,4).length).to eq(16)
-      end
-
-      it 'returns a 2x6 board that is not square' do
-        expect(Display.new.empty_board(2,6).length).to eq(12)
-      end
-    end
-  end
-
-  describe '#modified_board' do
-    context 'Board size agnostic' do
-      xit 'returns an unchanged board by default if no player_moves passed in' do
-        board = Display.new.empty_board
-        expect(Display.new.modified_board).to eq(board)
-      end
-
-      it 'changes VisualRep.visual_symbol from integer to player_symbol' do
-        player_move = [1]
-        expect(Display.new.modified_board(player_move).first.visual_symbol).to eq('X')
-      end
-
-      it 'changes VisualRep.visual_symbol from integer for two players' do
-        player1_moves = [1]
-        player2_moves = [2]
-        board = Display.new.modified_board(player1_moves, player2_moves)
-        expect(board[0].visual_symbol).to eq('X')
-        expect(board[1].visual_symbol).to eq('O')
+        expect(display4_board.length).to eq(16)
       end
     end
   end
@@ -53,7 +31,7 @@ describe Display do
   describe '#visual_board' do
     context 'various board sizes' do
       it 'returns a 3x3 board filled with integers as visual represenatation of board spaces' do
-        board = Display.new.visual_board
+        board = Display.new.visual_board(board3x3)
         board3 =  "  1   |  2   |  3   "  + "\n" +
                   "_____________________" + "\n" +
                   "  4   |  5   |  6   "  + "\n" +
@@ -62,11 +40,7 @@ describe Display do
         expect(board).to eq(board3)
       end
       it 'returns a 4x4 board filled with integers as visual represenatation of board spaces' do
-        player1_moves = []
-        player2_moves = []
-        width = 4
-        height = 4
-        board = Display.new.visual_board(player1_moves, player2_moves,height, width)
+        board = Display.new.visual_board(board4x4, 4, 4)
         board4 =  "  1   |  2   |  3   |  4   "  + "\n" +
                   "____________________________" + "\n" +
                   "  5   |  6   |  7   |  8   "  + "\n" +
@@ -78,29 +52,21 @@ describe Display do
       end
 
       it 'returns a 4x4 board filled with integers and Player symbols already played as visual represenatation of board spaces' do
-        player1_moves = [10, 11]
-        player2_moves = [14, 15]
-        width = 4
-        height = 4
-        board = Display.new.visual_board(player1_moves, player2_moves,height, width)
+        new_board = (1..9).to_a + ['X'] + ['X'] + (12..14).to_a + ['O'] + ['O']
+        board = Display.new.visual_board(new_board, 4, 4)
         board4 =  "  1   |  2   |  3   |  4   "  + "\n" +
                   "____________________________" + "\n" +
                   "  5   |  6   |  7   |  8   "  + "\n" +
                   "____________________________" + "\n" +
-                  "  9   |  X   |  X   |  12  "  + "\n" + 
+                  "  9   |  X   |  X   |  12  "  + "\n" +
                   "____________________________" + "\n" +
-                  "  13  |  O   |  O   |  16  " + "\n" 
+                  "  13  |  14  |  O   |  O   "  + "\n"
         expect(board).to eq(board4)
       end
 
       it 'returns properly formatted 4x4 board with custom sized player symbols included' do
-        player1_moves = [10, 11]
-        player2_moves = [14, 15]
-        width = 4
-        height = 4
-        player1_symbol = "&"
-        player2_symbol = "~+"
-        board = Display.new.visual_board(player1_moves, player2_moves,height, width, player1_symbol, player2_symbol)
+        board_spaces = (1..9).to_a + ["&", "&"] + (12..13).to_a + ["~+", "~+"] + ['16']
+        board = Display.new.visual_board(board_spaces, 4, 4)
         board4 =  "  1   |  2   |  3   |  4   "  + "\n" +
                   "____________________________" + "\n" +
                   "  5   |  6   |  7   |  8   "  + "\n" +
@@ -112,11 +78,8 @@ describe Display do
       end
 
       it 'returns a 5x5 board filled with integers as visual represenatation of board spaces' do
-        player1_moves = []
-        player2_moves = []
-        width = 5
-        height = 5
-        board = Display.new.visual_board(player1_moves, player2_moves,height, width)
+        board_spaces = (1..25).to_a
+        board = Display.new.visual_board(board_spaces, 5, 5)
         board5 =  "  1   |  2   |  3   |  4   |  5   "  + "\n" +
                   "___________________________________" + "\n" +
                   "  6   |  7   |  8   |  9   |  10  "  + "\n" +
@@ -128,21 +91,6 @@ describe Display do
                   "  21  |  22  |  23  |  24  |  25  "  + "\n"
         expect(board).to eq(board5)
       end
-
-      it 'returns a 2x4 board filled with integers as visual represenatation of board spaces' do
-        player1_moves = []
-        player2_moves = []
-        width = 4
-        height = 2
-        board = Display.new.visual_board(player1_moves, player2_moves,height, width)
-        board2x4 =  "  1   |  2   |  3   |  4   "  + "\n" +
-                    "____________________________" + "\n" +
-                    "  5   |  6   |  7   |  8   "  + "\n"
-        expect(board).to eq(board2x4)
-      end
-
-
-
     end
   end
 

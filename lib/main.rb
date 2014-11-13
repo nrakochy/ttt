@@ -20,17 +20,21 @@ class Main
     mode_choice = game_config.customize_else_3_in_a_row
       if mode_choice  == 'CUSTOMIZE'
         height = game_config.choose_board_size_height
-        width = game_config.choose_board_size_width
-        board = Board.new.new_board(height,width)
+        width = height
+        board_size = height * width
+        board = Board.new.new_board(board_size)
         board_setup = board.available_spaces.length
-        binding.pry
         game_rules = GameRules.new(height, width)
+        board = Board.new(game_rules)
+        board.new_board
       else 
-        board = Board.new
-        board_setup = board.available_spaces.length
         height = 3
         width = 3
-        game_rules = GameRules.new
+        board_size = height * width
+        game_rules = GameRules.new(height, width)
+        board = Board.new(game_rules)
+        board.new_board
+        board_setup = board_size
       end
 
     player1 = HumanPlayer.new(game_rules, board)
@@ -42,34 +46,24 @@ class Main
       else 
         player2 = HumanPlayer.new(game_rules, board, 'O')
       end
-    spaces_available = board_setup
-    print display.visual_board(board.player1_already_played, board.player2_already_played, height, width, player1.player_symbol, player2.player_symbol)
+    print display.visual_board(board, height, width)
     move_count = 0
     winner = false
-    while move_count < spaces_available && winner == false
+    while move_count < board_size && winner == false
       current_board ||= board
-      if player1_turn?(move_count)  
+      if move_count.even?
         player = player1
-        player_moves = board.player1_already_played
-      else  
+      else
         player = player2
-        player_moves = board.player2_already_played
       end
-      move = player.make_move(current_board)
+      move = player.make_move(board)
       io.move_choice(move)
       move_count += 1
-      current_board.apply_move_to_board(move, player_moves)
-      print display.visual_board(board.player1_already_played, board.player2_already_played, height, width, player1.player_symbol, player2.player_symbol)
-      already_played = played_combos(player_moves, width) 
-      already_played.each{|combo| winner = true if winner?(combo, game_rules.winning_combos)}
-      current_board
+      current_board.apply_move_to_board(move, player.player_symbol)
+      print display.visual_board(current_board, height, width)
+      winner = true if board.check_for_win?(player.player_symbol)
     end
     puts "Game over."
-  end
-
-
-  def player1_turn? move_count
-    move_count.even?
   end
 
   def winner? player_move, winning_combos

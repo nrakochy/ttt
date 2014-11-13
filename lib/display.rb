@@ -3,22 +3,10 @@ require 'pry'
 class Display
 
   
-  def empty_board height = 3, width = 3
-    board_size = height * width
-    x = 0
-    space = []
-    while x < board_size
-      space[x] = VisualRep.new(x+1)
-      x += 1
-    end
-    space
-  end
-  
-  def modified_board player1_moves = [], player2_moves = [], height = 3, width = 3, player1_symbol = 'X', player2_symbol = 'O'
-    board = empty_board(height, width)
-    player1_moves.each{|move| board[move - 1].visual_symbol = player1_symbol}
-    player2_moves.each{|move| board[move - 1].visual_symbol = player2_symbol}
-    board
+  def board_to_display(board_spaces)
+    visual_board = []
+    board_spaces.each_with_index{ |space, index| visual_board[index] = VisualRep.new(space) }
+    visual_board
   end
 
   def non_terminating_row_space_less_than_ten_width space 
@@ -77,11 +65,10 @@ class Display
     return_string(display)
   end
 
-  def visual_board player1_moves = [], player2_moves = [], height = 3, width = 3, player1_symbol = 'X', player2_symbol = 'O'
+  def visual_board board_spaces, height = 3, width = 3
     display = []
-    current_board = modified_board(player1_moves, player2_moves, height, width, player1_symbol, player2_symbol)
+    current_board = board_to_display(board_spaces)
     x = 1
-    display = []
     while x < height
       row_builder = row_builder(current_board, width)
       current_board -= row_builder
