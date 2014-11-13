@@ -37,12 +37,10 @@ describe HardAIPlayer do
 
     describe '#score_board_state' do
       it 'returns 10.0 if possible move results in win for the player' do
-        player_turn = 1
         expect(hard_ai.score_board_state(hard_ai.current_board, player_turn)).to eq(10.0)
       end
 
       it 'returns -10.0 if possible move results in win for the opponent' do
-        player_turn = -1
         expect(hard_ai.score_board_state(hard_ai.current_board, player_turn)).to eq(-10.0)
       end
 
@@ -75,24 +73,17 @@ describe HardAIPlayer do
    end
 
   describe '#create_scores_for_each_available_move' do
-      context '2 remaining moves' do
-        it 'returns a scores hash with available_moves for each key and their score as determined by negamax for the value' do
-          available_spaces = [3,5,7]
-          player2 = [2,6,9]
-          player1 = [1,4,8]
-          already_been_taken = player1 + player2
-
-          available2 = [3,5,7]
-          player2faux = [2,6,9]
-          player1faux = [1,4,8]
-          taken2 = player2faux + player1faux
-
-          copied_board = Board.new(available2, taken2, player2faux, player1faux)
-          board_state = Board.new(available_spaces, already_been_taken, player1, player2)
-          ai = HardAIPlayer.new(rules, board_state)
-          expect(ai.create_scores_for_each_available_move(copied_board)).to eq( { 3 => 10.0, 5 => -10.0, 7 => -10.0} )
-        end
+    context '2 remaining moves' do
+      it 'returns a scores hash with available_moves for each key and their score as determined by negamax for the value' do
+        available_spaces = [3,5,7]
+        player2 = [2,6,9]
+        player1 = [1,4,8]
+        already_been_taken = player1 + player2
+        board_state = Board.new(available_spaces, already_been_taken, player1, player2)
+        ai = HardAIPlayer.new(rules, board_state)
+        expect(ai.create_scores_for_each_available_move(ai.current_board)).to eq( { 3 => 10.0, 5 => -10.0, 7 => 0.0} )
       end
+    end
   end
 
     describe '#negamax' do
@@ -115,16 +106,18 @@ describe HardAIPlayer do
           player1 = [1,6,7,9]
           already_been_taken = player1 + player2
           board_state = Board.new(available_spaces, already_been_taken, player1, player2)
-          expect(hard_ai.negamax(board_state)).to eq( 0.0 )
+          ai = HardAIPlayer.new(rules, board_state)
+          expect(ai.negamax(board_state)).to eq( 0.0 )
         end
 
-        it 'returns 10.0 for the two remaining moves with 6, resulting in win for current_player turn' do
+        it 'returns 10.0 for the two remaining moves with 6 resulting in win for current_player turn' do
           available_spaces = [8,6]
           player2 = [3,4,9]
           player1 = [1,2,5,7]
           already_been_taken = player1 + player2
           board_state = Board.new(available_spaces, already_been_taken, player1, player2)
-          expect(hard_ai.negamax(board_state)).to eq( 10.0 )
+          ai = HardAIPlayer.new(rules, board_state)
+          expect(ai.negamax(board_state)).to eq( 10.0 )
         end
 
         it 'returns -10.0 for the two remaining moves, resulting in loss for the current_player' do
@@ -133,7 +126,8 @@ describe HardAIPlayer do
           player1 = [1,3,4,7,9]
           already_been_taken = player1 + player2
           board_state = Board.new(available_spaces, already_been_taken, player1, player2)
-          expect(hard_ai.negamax(board_state)).to eq( -10.0 )
+          ai = HardAIPlayer.new(rules, board_state)
+          expect(ai.negamax(board_state)).to eq( -10.0 )
         end
       end
     end
