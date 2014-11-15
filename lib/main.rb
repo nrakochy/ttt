@@ -22,12 +22,11 @@ class Main
         height = game_config.choose_board_size_height
         width = height
         board_size = height * width
-        board = Board.new.new_board(board_size)
-        board_setup = board.available_spaces.length
+        board_setup = board.game_board.length
         game_rules = GameRules.new(height, width)
         board = Board.new(game_rules)
         board.new_board
-      else 
+      else
         height = 3
         width = 3
         board_size = height * width
@@ -37,16 +36,16 @@ class Main
         board_setup = board_size
       end
 
-    player1 = HumanPlayer.new(game_rules, board)
+    player1 = HumanPlayer.new(game_rules)
     opponent = game_config.choose_opponent
       if opponent == 1
-        player2 = EasyAIPlayer.new(game_rules, board)
+        player2 = EasyAIPlayer.new(game_rules)
       elsif opponent == 2
-        player2 = HardAIPlayer.new(game_rules, board)
+        player2 = HardAIPlayer.new(game_rules)
       else 
-        player2 = HumanPlayer.new(game_rules, board, 'O')
+        player2 = HumanPlayer.new(game_rules, 'O')
       end
-    print display.visual_board(board, height, width)
+    print display.visual_board(board.game_board, height, width)
     move_count = 0
     winner = false
     while move_count < board_size && winner == false
@@ -60,7 +59,7 @@ class Main
       io.move_choice(move)
       move_count += 1
       current_board.apply_move_to_board(move, player.player_symbol)
-      print display.visual_board(current_board, height, width)
+      print display.visual_board(current_board.game_board, height, width)
       winner = true if board.check_for_win?(player.player_symbol)
     end
     puts "Game over."

@@ -1,15 +1,15 @@
+require 'pry'
 class EasyAIPlayer
-  attr_accessor :player_symbol, :board_spaces
+  attr_reader :player_symbol
 
-  def initialize game_rules, board_spaces, player_symbol = 'O'
+  def initialize game_rules, player_symbol = 'O'
       @player_symbol = player_symbol
-      @board_spaces = board_spaces
   end
 
-  def make_move
+  def make_move(board)
     move = "not_an_integer"
     while move.class != Fixnum
-      move = board_spaces.sample
+      move = board.game_board.sample
     end
     move
   end

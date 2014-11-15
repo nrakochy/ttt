@@ -1,60 +1,75 @@
 require 'pry'
 class HardAIPlayer
-  attr_reader :player_symbol, :current_board
+  attr_reader :player1_symbol, :player2_symbol, :current_board, :player_symbol
   
-  def initialize(game_rules, current_board, modified_board = [], player_symbol = 'O')
-    @rules = game_rules
+  def initialize(current_board, player1_symbol = 'X', player2_symbol = 'O', player_symbol = 'O')
+    @player1_symbol = player1_symbol
+    @player2_symbol = player2_symbol
+    @current_board =  current_board
     @player_symbol = player_symbol
-    @current_board = current_board
   end
 
   def make_move board
-    
+    scores = create_score_for_each_available_move(board)
+    get_next_best_move(scores)
   end
 
-  def create_scores_for_each_available_move(board, scores = {})
-    board.available_spaces.each do |move|
-      board.apply_move_to_board(move, board.player2_already_played)
-      scores[move] = -negamax(board)
-      board.undo_move(move)
+  def get_next_best_move scores_hash
+    scores_hash.max_by{|space, value| value}[0]
+  end
+
+  def create_score_for_each_available_move(board, scores = {})
+    @current_board = board
+    current_board.open_spaces.each do |move|
+      current_board.apply_move_to_board(move, player2_symbol)
+      scores[move] = -negamax(current_board)
+      current_board.undo_move(move)
     end
     scores
   end
 
-  def negamax(board, depth = 1, player_turn = 1)
-    return score_board_state(board, player_turn) if game_over?(board)
-    score = -9999
-    board.available_spaces.each do |move|
-      if player_turn < 0
-        board.apply_move_to_board(move, board.player2_already_played)
-      else
-        board.apply_move_to_board(move, board.player1_already_played)
-      end
-      negamax_result = -negamax(board, depth + 1, -player_turn)
-      score = [score, negamax_result].max
-      board.undo_move(move)
-    end
-    score
-  end
-
-  def score_board_state(board_obj, player_turn)
-    if winner?(board_obj.player1_already_played) || winner?(board_obj.player2_already_played)
-      10.0 * player_turn
+  def score_board_state(depth)
+    if winner?(player2_symbol) && depth == 0
+      1
+    elsif winner?(player2_symbol) || loser?
+     -1
     else
       0.0
     end
   end
 
-  def game_over?(board_obj)
-    tie?(board_obj.available_spaces) || winner?(board_obj.player1_already_played) || winner?(board_obj.player2_already_played)
+  def game_over?
+    tie? || winner?(player2_symbol) || loser?
   end
 
-  def tie?(board_state)
-    board_state.empty?
+  def tie?
+    current_board.tie?
   end
 
-  def winner? board_state
-    @rules.winner?(board_state, @rules.winning_combos)
+  def loser?
+    winner?(player1_symbol)
   end
+
+  def winner? symbol_of_either_player
+    current_board.check_for_win?(symbol_of_either_player)
+  end
+
+  private
+
+  def negamax(board, depth = 0, player_turn = 1)
+    return score_board_state(depth) if game_over?
+    score = -9999
+    board.open_spaces.each do |move|
+      if board.open_spaces.count.even?
+        board.apply_move_to_board(move, player2_symbol)
+      else
+        board.apply_move_to_board(move, player1_symbol)
+      end
+      score = [score, -negamax(board, depth + 1)].max
+      board.undo_move(move)
+    end
+    score
+  end
+
 
 end
