@@ -1,7 +1,6 @@
-require 'pry'
 class HardAIPlayer
   attr_reader :player1_symbol, :player2_symbol, :current_board, :player_symbol
-  
+
   def initialize(current_board, player1_symbol = 'X', player2_symbol = 'O', player_symbol = 'O')
     @player1_symbol = player1_symbol
     @player2_symbol = player2_symbol

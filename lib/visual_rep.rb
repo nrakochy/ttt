@@ -1,4 +1,4 @@
-class VisualRep 
+class VisualRep
   attr_accessor :visual_symbol
 
   def initialize visual_symbol

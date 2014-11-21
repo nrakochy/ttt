@@ -1,4 +1,3 @@
-require 'pry'
 class EasyAIPlayer
   attr_reader :player_symbol
 
@@ -7,11 +6,7 @@ class EasyAIPlayer
   end
 
   def make_move(board)
-    move = "not_an_integer"
-    while move.class != Fixnum
-      move = board.game_board.sample
-    end
-    move
+      board.find_open_spaces.first
   end
 
 end

@@ -7,7 +7,7 @@ class GameRules
 
   def winner? player_moves, winners, board_size = 3
     player_combos = player_moves.combination(board_size).to_a
-    got_a_winner = false 
+    got_a_winner = false
     player_combos.each{|arr| got_a_winner = true if winners.include?(arr)}
     got_a_winner
   end
@@ -17,7 +17,7 @@ class GameRules
     winners = find_winning_columns(height, width) + find_winning_rows(height, width) << find_winning_left_diagonal(height, width) <<  find_winning_right_diagonal(height, width)
     winners
   end
-  
+
   def find_winning_columns(height = 3, width = 3)
     winning_columns = []
     columns = 0.upto(width-1).to_a

@@ -1,12 +1,12 @@
 class FakeIO
   attr_accessor :input, :output
 
-  def initialize 
+  def initialize
     @input = []
     @output = []
   end
 
-  def get_input 
+  def get_input
     input.shift
   end
 

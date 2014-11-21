@@ -1,4 +1,3 @@
-require 'pry'
 class Board
   include Math
   attr_reader :game_rules, :game_board, :board_size, :player1_symbol, :player2_symbol, :move_count, :open_spaces

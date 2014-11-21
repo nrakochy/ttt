@@ -79,13 +79,11 @@ describe Board do
 
       describe 'tie?' do
         it 'returns true if move_count is the same as board_size' do
-          move_count = 9
-          expect(full3x3board.tie?(move_count)).to eq(true)
+          expect(full3x3board.tie?).to eq(true)
         end
 
         it 'returns false if there are still open moves on the board' do
-          move_count = 3
-          expect(board3x3.tie?(move_count)).to eq(false)
+          expect(board3x3.tie?).to eq(false)
         end
       end
 

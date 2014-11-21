@@ -12,7 +12,7 @@ class GameConfig
     "CUSTOMIZE" if input == 'C'
   end
 
-  def choose_opponent 
+  def choose_opponent
     @console.choose_opponent
     @console.user_input.to_i
   end
@@ -20,7 +20,6 @@ class GameConfig
   def choose_board_size_height
     @console.board_size_height
     @console.user_input.to_i
-     #VALIDATE INPUT
   end
 
   def choose_board_size_width

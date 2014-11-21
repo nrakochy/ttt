@@ -7,8 +7,6 @@ require_relative 'hard_ai_player'
 require_relative 'board_io'
 require_relative 'board'
 
-require 'pry'
-
 class Main
 
   def play_ttt
@@ -42,7 +40,7 @@ class Main
         player2 = EasyAIPlayer.new(game_rules)
       elsif opponent == 2
         player2 = HardAIPlayer.new(game_rules)
-      else 
+      else
         player2 = HumanPlayer.new(game_rules, 'O')
       end
     print display.visual_board(board.game_board, height, width)
@@ -62,13 +60,13 @@ class Main
       print display.visual_board(current_board.game_board, height, width)
       winner = true if board.check_for_win?(player.player_symbol)
     end
-    puts "Game over."
+    io.game_over
   end
 
   def winner? player_move, winning_combos
     winning_combos.include?(player_move)
   end
-  
+
   def played_combos(moves_played, width)
     moves_played.permutation(width).to_a
   end

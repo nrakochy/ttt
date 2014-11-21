@@ -1,15 +1,13 @@
 require_relative 'visual_rep'
-require 'pry'
 class Display
 
-  
   def board_to_display(board_spaces)
     visual_board = []
     board_spaces.each_with_index{ |space, index| visual_board[index] = VisualRep.new(space) }
     visual_board
   end
 
-  def non_terminating_row_space_less_than_ten_width space 
+  def non_terminating_row_space_less_than_ten_width space
     "  " + "#{space.visual_symbol} " + "  " + "|"
   end
 
@@ -28,7 +26,7 @@ class Display
   def add_non_terminating_row_space row_space
     if row_space.visual_symbol.to_s.length <  2
        non_terminating_row_space_less_than_ten_width(row_space)
-    else 
+    else
         non_terminating_row_space_more_than_ten_width(row_space)
     end
   end
@@ -36,7 +34,7 @@ class Display
   def add_terminating_row_space row_space
     if row_space.visual_symbol.to_s.length <  2
         terminating_row_space_less_than_ten_width(row_space)
-    else 
+    else
         terminating_row_space_more_than_ten_width(row_space)
     end
   end
@@ -51,11 +49,10 @@ class Display
   def return_string display
     display.inject(""){|sum, string| sum += string}
   end
-  
+
   def row_builder board, width
     board.slice(0, width)
   end
-
 
   def create_display_row row_spaces
     display = []

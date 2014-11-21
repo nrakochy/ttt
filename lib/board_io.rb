@@ -14,10 +14,4 @@ class BoardIO
   end
 
 end
-=begin
-Main 
 
-io = BoardIO.new
-messages = BoardMessages.new(io)
-
-=end
