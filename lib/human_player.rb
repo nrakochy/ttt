@@ -9,7 +9,7 @@ class HumanPlayer
   end
 
   def make_move board
-    @console.get_input.to_i
+    @console.user_input.to_i
   end
 
 end
