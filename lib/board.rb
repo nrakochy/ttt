@@ -2,11 +2,15 @@ class Board
   include Math
   attr_reader :board_size, :game_board, :open_spaces, :move_count
 
-  def initialize(board_size = 9)
+  def initialize(board_size = 3)
     @board_size = board_size
-    @game_board = (1..@board_size).to_a
+    @game_board = (1..(board_size*board_size)).to_a
     @open_spaces = find_open_spaces
     @move_count = 0
+  end
+
+  def find_board_size
+    @board_size
   end
 
   def apply_move_to_board(player_move, player_whose_turn_to_play)
