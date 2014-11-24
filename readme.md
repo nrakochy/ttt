@@ -19,4 +19,4 @@ Negamax
 	def create_score_for_each_available_move
 		eliminate -scores default arg
 		 current_board will keep the state throughout the game-- eliminate passing the board to make move
-		 change direct referece to board's attributes - use find_open_spaces
+		 change direct reference to board's attributes - use find_open_spaces
