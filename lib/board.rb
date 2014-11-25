@@ -45,6 +45,8 @@ class Board
 
   def preload_game_board_spaces input
     @game_board = input
+    find_open_spaces
+    find_move_count
     self
   end
 

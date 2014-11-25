@@ -3,19 +3,17 @@ require_relative '../lib/board'
 require_relative '../lib/game_rules'
 
 describe EasyAIPlayer do
+  let(:board){ Board.new }
+  let(:game_rules){ GameRules.new(board) }
+  let(:player){ EasyAIPlayer.new(game_rules) }
   
   it 'initializes a Player Object with a symbol attribute' do
-    rules = []
-    new_player = EasyAIPlayer.new(rules, 'X')
-    expect(new_player.player_symbol).to eq('X')
+    expect(player.player_symbol).to eq('O')
   end
 
   describe '#make_move' do
-    it 'returns only integers from board' do
-      game_rules = GameRules.new
-      board = Board.new(game_rules)
-      new_player = EasyAIPlayer.new(game_rules)
-      expect(new_player.make_move(board)).to eq(1)
+    it 'returns 1, the first available open space on the game board' do
+      expect(player.make_move).to eq(1)
     end
   end
 

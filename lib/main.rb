@@ -25,13 +25,9 @@ class Main
         board = Board.new(game_rules)
         board.new_board
       else
-        height = 3
-        width = 3
-        board_size = height * width
-        game_rules = GameRules.new(height, width)
-        board = Board.new(game_rules)
-        board.new_board
-        board_setup = board_size
+        board = Board.new
+        num_spaces_on_the_board = board.get_game_board.count
+        game_rules = GameRules.new(board)
       end
 
     player1 = HumanPlayer.new(game_rules)
@@ -43,7 +39,7 @@ class Main
       else
         player2 = HumanPlayer.new(game_rules, 'O')
       end
-    print display.visual_board(board.game_board, height, width)
+    print display.visual_board(board.get_the_game_board, height, width)
     move_count = 0
     winner = false
     while move_count < board_size && winner == false

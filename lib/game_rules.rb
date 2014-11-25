@@ -1,15 +1,15 @@
 class GameRules
 
-  attr_reader :winning_combos, :rules, :player1_symbol, :player2_symbol
+  attr_reader :winning_combos, :rules, :player1_symbol, :player2_symbol, :board
 
   def initialize(board, winning_combos = [], player1_symbol = 'X', player2_symbol = 'O')
     @board = board
     @board_size = board.find_board_size
     @height = @board_size
     @width = @board_size
-    @winning_combos = winning_combos
     @player1_symbol = player1_symbol
     @player2_symbol = player2_symbol
+    @winning_combos = find_winning_combinations
   end
 
   def winner?(player_moves)

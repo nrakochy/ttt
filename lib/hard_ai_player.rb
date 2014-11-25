@@ -1,11 +1,11 @@
 class HardAIPlayer
-  attr_reader :player1_symbol, :player2_symbol, :current_board, :player_symbol
+  attr_reader :player1_symbol, :player2_symbol, :current_board, :game_rules
 
-  def initialize(current_board, player1_symbol = 'X', player2_symbol = 'O', player_symbol = 'O')
-    @player1_symbol = player1_symbol
-    @player2_symbol = player2_symbol
-    @current_board =  current_board
-    @player_symbol = player_symbol
+  def initialize(game_rules)
+    @game_rules = game_rules
+    @player1_symbol = game_rules.player1_symbol
+    @player2_symbol = game_rules.player2_symbol
+    @current_board =  game_rules.board
   end
 
   def make_move board
@@ -17,12 +17,11 @@ class HardAIPlayer
     scores_hash.max_by{|space, value| value}[0]
   end
 
-  def create_score_for_each_available_move(board, scores = {})
-    @current_board = board
-    current_board.open_spaces.each do |move|
-      current_board.apply_move_to_board(move, player2_symbol)
-      scores[move] = -negamax(current_board)
-      current_board.undo_move(move)
+  def create_score_for_each_available_move(scores = {})
+    @current_board.find_open_spaces.each do |move|
+      @current_board.apply_move_to_board(move, player2_symbol)
+      scores[move] = -negamax(@current_board)
+      @current_board.undo_move(move)
     end
     scores
   end
@@ -38,11 +37,11 @@ class HardAIPlayer
   end
 
   def game_over?
-    tie? || winner?(player2_symbol) || loser?
+    tie? || @game_rules.winner_on_the_board?
   end
 
   def tie?
-    current_board.tie?
+    @game_rules.tie?
   end
 
   def loser?
@@ -50,7 +49,7 @@ class HardAIPlayer
   end
 
   def winner? symbol_of_either_player
-    current_board.check_for_win?(symbol_of_either_player)
+    @game_rules.check_for_win?(symbol_of_either_player)
   end
 
   private
