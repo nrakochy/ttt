@@ -1,11 +1,6 @@
+require 'pry'
 require_relative 'visual_rep'
-class Display
-
-  def board_to_display(board_spaces)
-    visual_board = []
-    board_spaces.each_with_index{ |space, index| visual_board[index] = VisualRep.new(space) }
-    visual_board
-  end
+class ConsoleBoardPresenter
 
   def non_terminating_row_space_less_than_ten_width space
     "  " + "#{space.visual_symbol} " + "  " + "|"
@@ -25,17 +20,17 @@ class Display
 
   def add_non_terminating_row_space row_space
     if row_space.visual_symbol.to_s.length <  2
-       non_terminating_row_space_less_than_ten_width(row_space)
+      non_terminating_row_space_less_than_ten_width(row_space)
     else
-        non_terminating_row_space_more_than_ten_width(row_space)
+      non_terminating_row_space_more_than_ten_width(row_space)
     end
   end
 
   def add_terminating_row_space row_space
     if row_space.visual_symbol.to_s.length <  2
-        terminating_row_space_less_than_ten_width(row_space)
+      terminating_row_space_less_than_ten_width(row_space)
     else
-        terminating_row_space_more_than_ten_width(row_space)
+      terminating_row_space_more_than_ten_width(row_space)
     end
   end
 
@@ -62,7 +57,13 @@ class Display
     return_string(display)
   end
 
-  def visual_board board_spaces, height = 3, width = 3
+  def board_to_display(board_spaces)
+    visual_board = []
+    board_spaces.each_with_index{ |space, index| visual_board[index] = VisualRep.new(space) }
+    visual_board
+  end
+
+  def display_board(board_spaces, height, width)
     display = []
     current_board = board_to_display(board_spaces)
     x = 1

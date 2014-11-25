@@ -29,19 +29,19 @@ describe HardAIPlayer do
     context '3x3 board' do
       describe '#initialize' do
         it 'initializes with symbol attribute for player and opponent' do
-          expect(hard_ai_with_full_board.player2_symbol).to eq('O')
-          expect(hard_ai_with_full_board.player1_symbol).to eq('X')
+          expect(hard_ai_with_full_board.player_symbol).to eq('O')
+          expect(hard_ai_with_full_board.opponent_symbol).to eq('X')
         end
       end
 
-      describe '#winner?' do
-        it 'returns true if the board includes winning combination for a specific player' do
-          expect(hard_ai_with_full_board.winner?(hard_ai_with_full_board.player1_symbol)).to eq(true)
-        end
+    describe '#winner?' do
+      it 'returns true if the board includes winning combination for a specific player' do
+        expect(hard_ai_with_full_board.winner?(hard_ai_with_full_board.opponent_symbol)).to eq(true)
+      end
 
-        it 'returns false if the board does not include a winning combination for a specific player' do
-          expect(hard_ai_with_full_board.winner?(hard_ai_with_full_board.player2_symbol)).to eq(false)
-        end
+      it 'returns false if the board does not include a winning combination for a specific player' do
+        expect(hard_ai_with_full_board.winner?(hard_ai_with_full_board.player_symbol)).to eq(false)
+      end
     end
 
     describe '#score_board_state' do
@@ -98,7 +98,7 @@ describe HardAIPlayer do
           ["X", 2, "O", "X", "O", "X", 7, "O", "X"])
         rules_with_preloaded_board = GameRules.new(new_board)
         ai = HardAIPlayer.new(rules_with_preloaded_board)
-        expect(ai.create_score_for_each_available_move).to eq({ 2=>-1, 7=>-1  } )
+        expect(ai.create_score_for_each_available_move).to eq({ 2=> 1, 7=> 1  } )
 
 =begin
 

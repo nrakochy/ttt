@@ -1,71 +1,10 @@
-require_relative 'game_config'
-require_relative 'game_rules'
-require_relative 'display'
-require_relative 'human_player'
-require_relative 'easy_ai_player'
-require_relative 'hard_ai_player'
-require_relative 'board_io'
-require_relative 'board'
+require_relative 'game'
 
 class Main
 
-  def play_ttt
-    display = Display.new
-    board_io = BoardIO.new
-    io = Console.new(board_io)
-    game_config  = GameConfig.new(io)
-
-    mode_choice = game_config.customize_else_3_in_a_row
-      if mode_choice  == 'CUSTOMIZE'
-        height = game_config.choose_board_size_height
-        width = height
-        board_size = height * width
-        board_setup = board.game_board.length
-        game_rules = GameRules.new(height, width)
-        board = Board.new(game_rules)
-        board.new_board
-      else
-        board = Board.new
-        num_spaces_on_the_board = board.get_game_board.count
-        game_rules = GameRules.new(board)
-      end
-
-    player1 = HumanPlayer.new(game_rules)
-    opponent = game_config.choose_opponent
-      if opponent == 1
-        player2 = EasyAIPlayer.new(game_rules)
-      elsif opponent == 2
-        player2 = HardAIPlayer.new(game_rules)
-      else
-        player2 = HumanPlayer.new(game_rules, 'O')
-      end
-    print display.visual_board(board.get_the_game_board, height, width)
-    move_count = 0
-    winner = false
-    while move_count < board_size && winner == false
-      current_board ||= board
-      if move_count.even?
-        player = player1
-      else
-        player = player2
-      end
-      move = player.make_move(board)
-      io.move_choice(move)
-      move_count += 1
-      current_board.apply_move_to_board(move, player.player_symbol)
-      print display.visual_board(current_board.game_board, height, width)
-      winner = true if board.check_for_win?(player.player_symbol)
-    end
-    io.game_over
-  end
-
-  def winner? player_move, winning_combos
-    winning_combos.include?(player_move)
-  end
-
-  def played_combos(moves_played, width)
-    moves_played.permutation(width).to_a
-  end
+ def play_ttt
+   Game.new.setup_and_play_ttt
+ end
 
 end
 

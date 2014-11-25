@@ -8,7 +8,7 @@ class HumanPlayer
     @player_symbol = player_symbol
   end
 
-  def make_move board
+  def make_move
     @console.user_input.to_i
   end
 
