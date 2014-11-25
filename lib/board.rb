@@ -13,11 +13,14 @@ class Board
     @board_size
   end
 
+  def get_the_game_board
+    @game_board
+  end
+
   def apply_move_to_board(player_move, player_whose_turn_to_play)
     @game_board[player_move-1] = player_whose_turn_to_play
     find_open_spaces
     find_move_count
-    self
   end
 
   def valid_move?(move)
@@ -28,7 +31,6 @@ class Board
     @game_board[player_move - 1] = player_move
     find_open_spaces
     find_move_count
-    self
   end
 
   def find_open_spaces
@@ -38,7 +40,12 @@ class Board
   end
 
   def find_move_count
-    @move_count = @board_size - @open_spaces.count
+    @move_count = @game_board.count - @open_spaces.count
+  end
+
+  def preload_game_board_spaces input
+    @game_board = input
+    self
   end
 
 end

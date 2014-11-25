@@ -2,7 +2,7 @@ require_relative '../lib/board'
 
 describe Board do
   let(:board3x3){ Board.new }
-  let(:board4x4){ Board.new(16) }
+  let(:board4x4){ Board.new(4) }
 
   describe '#initialize' do
     context '3x3 board' do

@@ -2,7 +2,7 @@ class GameRules
 
   attr_reader :winning_combos, :rules, :player1_symbol, :player2_symbol
 
-  def initialize board, winning_combos = [], player1_symbol = 'X', player2_symbol = 'O'
+  def initialize(board, winning_combos = [], player1_symbol = 'X', player2_symbol = 'O')
     @board = board
     @board_size = board.find_board_size
     @height = @board_size
@@ -12,7 +12,7 @@ class GameRules
     @player2_symbol = player2_symbol
   end
 
-  def winner? player_moves
+  def winner?(player_moves)
     player_combos = player_moves.combination(@board_size).to_a
     got_a_winner = false
     player_combos.each{|arr| got_a_winner = true if @winning_combos.include?(arr)}
@@ -25,6 +25,7 @@ class GameRules
       find_winning_rows <<
       find_winning_left_diagonal <<
       find_winning_right_diagonal
+    @winning_combos = winners
   end
 
   def find_winning_columns
@@ -72,24 +73,18 @@ class GameRules
     end
     winning_diagonal
   end
-  
 
-  def find_player_moves_indices(player_symbol)
+  def find_player_moves_by_indices(player_symbol)
     player_moves = []
-    @game_board.each_with_index{ |space, index| player_moves << index if space == player_symbol }
+    @board.get_the_game_board.each_with_index{ |space, index| player_moves << index if space == player_symbol }
     player_moves
   end
 
-  def player_move_combinations(player_symbol)
-    moves_to_check = find_player_moves_indices(player_symbol)
-    moves_to_check.permutation(winners_length).to_a
-  end
-
-  def winner? player_combo
+  def winner?(player_combo)
     @winning_combos.include?(player_combo)
   end
 
-  def check_for_win? player_symbol
+  def check_for_win?(player_symbol)
     got_a_winner = false
     move_combos = player_move_combinations(player_symbol)
     return false if move_combos.empty?
@@ -104,5 +99,13 @@ class GameRules
   def winner_on_the_board?
     check_for_win?(@player1_symbol) || check_for_win?(@player2_symbol)
   end
+
+  private
+
+  def player_move_combinations(player_symbol)
+    moves_to_check = find_player_moves_by_indices(player_symbol)
+    moves_to_check.permutation(@board_size).to_a
+  end
+
 
 end

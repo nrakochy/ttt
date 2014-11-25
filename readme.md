@@ -5,6 +5,15 @@ To run -
 
 To-Do
 
+Separate Main methods and test
+
+Use FakeIO to run through whole game
+
+Change  BoardIO => ConsoleIO
+        Display => ConsoleBoardPresenter
+        Main => Game
+        Console => ConsolePresenter
+
 Separate the GameRules from the Board --
 	Board needs no knowledge of the rules
 	  - only need to initialize board size
