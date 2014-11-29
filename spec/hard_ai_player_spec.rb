@@ -36,11 +36,11 @@ describe HardAIPlayer do
 
     describe '#winner?' do
       it 'returns true if the board includes winning combination for a specific player' do
-        expect(hard_ai_with_full_board.winner?(hard_ai_with_full_board.opponent_symbol)).to eq(true)
+        expect(hard_ai_with_full_board.winner_on_the_board?).to eq(true)
       end
 
       it 'returns false if the board does not include a winning combination for a specific player' do
-        expect(hard_ai_with_full_board.winner?(hard_ai_with_full_board.player_symbol)).to eq(false)
+        expect(hard_ai_with_empty_board.winner_on_the_board?).to eq(false)
       end
     end
 
@@ -114,24 +114,75 @@ describe HardAIPlayer do
   end
   describe '#make_move' do
     context '3x3 board'
-    it 'returns the next best move' do
-      skip 'Need to write specs to ensure Negamax returns correct next move for all 3x3 scenarios'
-      board_spaces = (1..9).to_a
-      player1_indices = [0,2,7,8]
-      player2_indices = [1,4,6]
-      board1 = make_moves(player1_indices, board_spaces, "X")
-      board_both = make_moves(player2_indices, board1, "O")
-      board = Board.new(rules, 9, board_both)
-      ai = HardAIPlayer.new(board)
-      expect(ai.create_score_for_each_available_move(board)).to eq( {4 => -1, 6=> 0.0 } )
+      it 'takes the winning space if available' do
+         new_board = empty_board.preload_game_board_spaces(
+          ["X", "O", "X", "X", "O", 6, "O", 8, "X"])
+        rules_with_preloaded_board = GameRules.new(new_board)
+        ai = HardAIPlayer.new(rules_with_preloaded_board)
+        expect(ai.make_move).to eq( 8 )
 
 =begin
 
         X  |  O  |  X
 
-        4  |  O  |  6
+        X  |  O  |  6
+
+        O  |  8  |  X
+
+=end
+      end
+
+      it 'blocks the losing space if no winning move is available' do
+         new_board = empty_board.preload_game_board_spaces(
+          ["O", "O", "X", "X", "X", 6, "O", 8, "X"])
+        rules_with_preloaded_board = GameRules.new(new_board)
+        ai = HardAIPlayer.new(rules_with_preloaded_board)
+        expect(ai.make_move).to eq( 6 )
+
+=begin
+
+        O  |  O  |  X
+
+        X  |  X  |  6
+
+        O  |  8  |  X
+
+=end
+      end
+
+      it 'blocks the losing space with higher integer number than other available, non-winning open space' do
+       new_board = empty_board.preload_game_board_spaces(
+          ["X", "O", "X", "O", "X", "X", "O", 8, 9])
+        rules_with_preloaded_board = GameRules.new(new_board)
+        ai = HardAIPlayer.new(rules_with_preloaded_board)
+        expect(ai.make_move).to eq( 9 )
+
+=begin
+
+        X  |  O  |  X
 
         O  |  X  |  X
+
+        O  |  8  |  9
+
+=end
+      end
+
+      it 'does not allow itself to be forked, which would create two winning moves for the opponent' do
+       new_board = empty_board.preload_game_board_spaces(
+          [1, 2, "X", 4, "O", 6, "X", 8, 9])
+        rules_with_preloaded_board = GameRules.new(new_board)
+        ai = HardAIPlayer.new(rules_with_preloaded_board)
+        expect(ai.make_move).not_to eq( 1 )
+        expect(ai.make_move).not_to eq( 9 )
+
+=begin
+
+        1  |  2  |  X
+
+        4  |  O  |  6
+
+        X  |  8  |  9
 
 =end
       end
