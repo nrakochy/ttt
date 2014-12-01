@@ -14,32 +14,6 @@ describe GameRules do
   let(:game_rules_3board_with_winner){ GameRules.new(full_3x3board_winner, winning_3board_combos )}
   let(:game_rules_4board_empty){ GameRules.new(board4x4, winning_4board_combos) }
 
-  describe '#winner?' do
-    context 'default 3x3 board' do
-      it 'returns true if player moves has a winning combination' do
-        player_moves = [0,1,2]
-        expect(game_rules_3board_empty.winner?(player_moves)).to eq(true)
-      end
-
-      it 'returns false on a new board' do
-        player_moves = [1,2,3]
-        expect(game_rules_3board_empty.winner?(player_moves)).to eq(false)
-      end
-    end
-
-    context '4x4 board' do
-      it 'returns true if player moves has a winning combination' do
-        player_moves = [0,1,2,3]
-        expect(game_rules_4board_empty.winner?(player_moves)).to eq(true)
-      end
-
-      it 'returns false if player moves does not have a winning combination' do
-        player_moves = [4,2,3,9]
-        expect(game_rules_4board_empty.winner?(player_moves)).to eq(false)
-      end
-    end
-  end
-
   describe '#find_winning_columns' do
       it 'identifies the columns with winning combinations for 3-in-a-row by default' do
         expect(game_rules_3board_empty.find_winning_columns).to eq([[0,3,6], [1,4,7], [2,5,8]])
@@ -89,25 +63,25 @@ describe GameRules do
         end
       end
 
-      describe '#winner?' do
+      describe '#got_a_winner?' do
         it 'returns true if array of moves has a winning combination' do
           player_moves = [0,1,2]
-          expect(game_rules_3board_empty.winner?(player_moves)).to eq(true)
+          expect(game_rules_3board_empty.got_a_winner?(player_moves)).to eq(true)
         end
 
         it 'returns false if array of players moves does not have a winning combo' do
           player_moves = [1,2,3]
-          expect(game_rules_3board_empty.winner?(player_moves)).to eq(false)
+          expect(game_rules_3board_empty.got_a_winner?(player_moves)).to eq(false)
         end
 
         it 'returns true if player moves has a winning combination' do
           player_moves = [0,1,2,3]
-          expect(game_rules_4board_empty.winner?(player_moves)).to eq(true)
+          expect(game_rules_4board_empty.got_a_winner?(player_moves)).to eq(true)
         end
 
         it 'returns false if player moves does not have a winning combination' do
           player_moves = [4,2,3,9]
-          expect(game_rules_4board_empty.winner?(player_moves)).to eq(false)
+          expect(game_rules_4board_empty.got_a_winner?(player_moves)).to eq(false)
         end
       end
 

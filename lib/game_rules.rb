@@ -15,7 +15,7 @@ class GameRules
   def winner?(player_moves)
     player_combos = player_moves.combination(@board_size).to_a
     got_a_winner = false
-    player_combos.each{|arr| got_a_winner = true if @winning_combos.include?(arr)}
+    player_combos.each{|arr| got_a_winner = true if got_a_winner?(arr)}
     got_a_winner
   end
 
@@ -80,7 +80,7 @@ class GameRules
     player_moves
   end
 
-  def winner?(player_combo)
+  def got_a_winner?(player_combo)
     @winning_combos.include?(player_combo)
   end
 
@@ -88,7 +88,7 @@ class GameRules
     got_a_winner = false
     move_combos = player_move_combinations(player_symbol)
     return false if move_combos.empty?
-    move_combos.each{|combo| got_a_winner = true if winner?(combo) }
+    move_combos.each{|combo| got_a_winner = true if got_a_winner?(combo) }
     got_a_winner
   end
 
