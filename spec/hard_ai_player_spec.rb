@@ -46,13 +46,11 @@ describe HardAIPlayer do
 
     describe '#score_board_state' do
       it 'returns -1 if board_state results in win for player1' do
-        depth = 1
-        expect(hard_ai_with_full_board.score_board_state(depth)).to eq(-1)
+        expect(hard_ai_with_full_board.score_board_state).to eq(-1)
       end
 
       it 'returns 0.0 if possible move is not a winning move' do
-        depth = 1
-        expect(hard_ai_with_empty_board.score_board_state(depth)).to eq(0.0)
+        expect(hard_ai_with_empty_board.score_board_state).to eq(0.0)
       end
     end
 
@@ -74,12 +72,13 @@ describe HardAIPlayer do
    end
 
     describe '#create_score_for_each_available_move' do
-      it 'returns hash { 4 => -1, 6 => 0.0 }, with 4 resulting in a loss and 6 resulting in a tie' do
-        new_board = empty_board.preload_game_board_spaces(
-         ["X", "O", "X", 4, "O", 6, "O", "X", "X"])
-        rules_with_preloaded_board = GameRules.new(new_board)
-        ai = HardAIPlayer.new(rules_with_preloaded_board)
-        expect(ai.create_score_for_each_available_move).to eq( {4 => -1, 6=> 0.0 } )
+      context '2 remaining moves' do
+        it 'returns hash { 4 => -1, 6 => 0.0 }, with 4 resulting in a loss and 6 resulting in a tie' do
+          new_board = empty_board.preload_game_board_spaces(
+           ["X", "O", "X", 4, "O", 6, "O", "X", "X"])
+          rules_with_preloaded_board = GameRules.new(new_board)
+          ai = HardAIPlayer.new(rules_with_preloaded_board)
+          expect(ai.create_score_for_each_available_move).to eq( {4 => -1, 6=> 0.0 } )
 
 =begin
 
@@ -92,12 +91,12 @@ describe HardAIPlayer do
 =end
       end
 
-      it 'returns hash { 2 => 1, 7 => 1 }, with both moves resulting in a win for player2' do
-        new_board = empty_board.preload_game_board_spaces(
-          ["X", 2, "O", "X", "O", "X", 7, "O", "X"])
-        rules_with_preloaded_board = GameRules.new(new_board)
-        ai = HardAIPlayer.new(rules_with_preloaded_board)
-        expect(ai.create_score_for_each_available_move).to eq({ 2=> 1, 7=> 1  } )
+        it 'returns hash { 2 => 1, 7 => 1 }, with both moves resulting in a win for player2' do
+          new_board = empty_board.preload_game_board_spaces(
+            ["X", 2, "O", "X", "O", "X", 7, "O", "X"])
+          rules_with_preloaded_board = GameRules.new(new_board)
+          ai = HardAIPlayer.new(rules_with_preloaded_board)
+          expect(ai.create_score_for_each_available_move).to eq({ 2=> 1, 7=> 1  } )
 
 =begin
 
@@ -109,8 +108,10 @@ describe HardAIPlayer do
 
 =end
       end
-      it 'returns { 1 => -1.0, 2 => -1.0, 3 => -1.0, 4 => -1.0, 5 => 0.0, 6 => -1.0, 7 => -1.0, 8 => -1.0 } 
-          if first move taken is the corner 9 space' do
+    end
+
+    context '8 remaining moves' do
+      it 'returns { 1 => -1.0, 2 => -1.0, 3 => -1.0, 4 => -1.0, 5 => 0.0, 6 => -1.0, 7 => -1.0, 8 => -1.0 } if first move taken is the corner 9 space' do
         new_board = empty_board.preload_game_board_spaces(
           [1, 2, 3, 4, 5, 6, 7, 8, "X"])
         rules_with_preloaded_board = GameRules.new(new_board)
@@ -126,69 +127,10 @@ describe HardAIPlayer do
         7  |  8  |  X
 
 =end
-      end
 
-  describe 'alpha-beta pruning correctly scores board after one move' do
-    context '2 remaining moves' do
-      it 'returns hash { 4 => -1, 6 => 0.0 }, with 4 resulting in a loss and 6 resulting in a tie' do
-        new_board = empty_board.preload_game_board_spaces(
-         ["X", "O", "X", 4, "O", 6, "O", "X", "X"])
-        rules_with_preloaded_board = GameRules.new(new_board)
-        ai = HardAIPlayer.new(rules_with_preloaded_board)
-        expect(ai.create_pruned_score_for_each_available_move).to eq( {4 => -1, 6=> 0.0 } )
-
-=begin
-
-        X  |  O  |  X
-
-        4  |  O  |  6
-
-        O  |  X  |  X
-
-=end
-      end
-
-      it 'returns hash { 2 => 1, 7 => 1 }, with both moves resulting in a win for player2' do
-        new_board = empty_board.preload_game_board_spaces(
-          ["X", 2, "O", "X", "O", "X", 7, "O", "X"])
-        rules_with_preloaded_board = GameRules.new(new_board)
-        ai = HardAIPlayer.new(rules_with_preloaded_board)
-        expect(ai.create_pruned_score_for_each_available_move).to eq({ 2=> 1, 7=> 1  } )
-
-=begin
-
-        X  |  2  |  O
-
-        X  |  O  |  X
-
-        7  |  O  |  X
-
-=end
-      end
-    end
-  context '8 remaining moves' do
-      it 'returns { 1 => -1.0, 2 => -1.0, 3 => -1.0, 4 => -1.0, 5 => 0.0, 6 => -1.0, 7 => -1.0, 8 => -1.0 } 
-          if first move taken is the corner 9 space' do
-        new_board = empty_board.preload_game_board_spaces(
-          [1, 2, 3, 4, 5, 6, 7, 8, "X"])
-        rules_with_preloaded_board = GameRules.new(new_board)
-        ai = HardAIPlayer.new(rules_with_preloaded_board)
-        expect(ai.create_pruned_score_for_each_available_move).to eq( { 1 => -1.0, 2 => -1.0, 3 => -1.0, 4 => -1.0, 5 => 0.0, 6 => -1.0, 7 => -1.0, 8 => -1.0 })
-
-=begin
-
-        1  |  2  |  3
-
-        4  |  5  |  6
-
-        7  |  8  |  X
-
-=end
       end
     end
   end
-    end
-
   describe '#make_move' do
     context '3x3 board'
       it 'takes the winning space if available' do
@@ -263,6 +205,25 @@ describe HardAIPlayer do
 
 =end
       end
+
+      it 'takes the middle space for 1st move if opponent has taken corner space' do
+        new_board = empty_board.preload_game_board_spaces(
+          [1, 2, 3, 4, 5, 6, 7, 8, "X"])
+        rules_with_preloaded_board = GameRules.new(new_board)
+        ai = HardAIPlayer.new(rules_with_preloaded_board)
+        expect(ai.make_move).to eq( 5 )
+
+=begin
+
+        1  |  2  |  3
+
+        4  |  5  |  6
+
+        7  |  8  |  X
+
+=end
+      end
+
     end
   end
 end

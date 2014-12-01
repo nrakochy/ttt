@@ -1,4 +1,3 @@
-require 'pry'
 class HardAIPlayer
   attr_reader :opponent_symbol, :player_symbol, :current_board, :game_rules
 
@@ -15,7 +14,7 @@ class HardAIPlayer
   end
 
   def make_move
-    scores = create_pruned_score_for_each_available_move
+    scores = create_score_for_each_available_move
     get_next_best_move(scores)
   end
 
@@ -24,16 +23,6 @@ class HardAIPlayer
   end
 
   def create_score_for_each_available_move(scores = {})
-    @current_board.find_open_spaces.each do |move|
-      @current_board.apply_move_to_board(move, player_symbol)
-      scores[move] = -negamax(
-        @current_board, depth = 0)
-      @current_board.undo_move(move)
-    end
-    scores
-  end
-
-  def create_pruned_score_for_each_available_move(scores = {})
     @current_board.find_open_spaces.each do |move|
       @current_board.apply_move_to_board(move, player_symbol)
       scores[move] = -negamax_with_alpha_beta_pruning(
@@ -59,30 +48,7 @@ class HardAIPlayer
     @game_rules.winner_on_the_board?
   end
 
-  def winner?(symbol_of_either_player)
-    @game_rules.check_for_win?(symbol_of_either_player)
-  end
-
-  def loser?
-    winner?(@opponent_symbol)
-  end
-
   private
-
-  def negamax(board, depth = 0)
-    return score_board_state(depth) if game_over?
-    score = -99999
-    board.open_spaces.each do |move|
-      if board.open_spaces.count.even?
-        board.apply_move_to_board(move, player_symbol)
-      else
-        board.apply_move_to_board(move, opponent_symbol)
-      end
-      score = [score, -negamax(board, depth + 1)].max
-      board.undo_move(move)
-    end
-    score
-  end
 
   def negamax_with_alpha_beta_pruning(board, alpha, beta)
     return score_board_state if game_over?
@@ -100,7 +66,4 @@ class HardAIPlayer
     end
     alpha
   end
-
-
-
 end
