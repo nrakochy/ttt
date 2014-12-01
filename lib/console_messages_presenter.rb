@@ -1,7 +1,7 @@
 require_relative '../lib/console_io'
 class ConsoleMessagesPresenter
 
-  def initialize io = ConsoleIO.new
+  def initialize(io = ConsoleIO.new)
     @io = io
   end
 
