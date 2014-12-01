@@ -1,4 +1,4 @@
-require_relative 'console'
+require_relative 'console_messages_presenter'
 
 class GameConfig
 

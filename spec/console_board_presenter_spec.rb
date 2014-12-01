@@ -37,7 +37,7 @@ describe ConsoleBoardPresenter do
                   "_____________________" + "\n" +
                   "  4   |  5   |  6   "  + "\n" +
                   "_____________________" + "\n" +
-                  "  7   |  8   |  9   "  + "\n" 
+                  "  7   |  8   |  9   "  + "\n"
         expect(board).to eq(board3)
       end
       it 'returns a 4x4 board filled with integers as visual represenatation of board spaces' do
@@ -46,9 +46,9 @@ describe ConsoleBoardPresenter do
                   "____________________________" + "\n" +
                   "  5   |  6   |  7   |  8   "  + "\n" +
                   "____________________________" + "\n" +
-                  "  9   |  10  |  11  |  12  "  + "\n" + 
+                  "  9   |  10  |  11  |  12  "  + "\n" +
                   "____________________________" + "\n" +
-                  "  13  |  14  |  15  |  16  " + "\n" 
+                  "  13  |  14  |  15  |  16  " + "\n"
         expect(board).to eq(board4)
       end
 

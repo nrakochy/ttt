@@ -1,11 +1,11 @@
 require_relative '../lib/game_config'
 require_relative '../lib/fake_io'
-require_relative '../lib/console'
+require_relative '../lib/console_messages_presenter'
 require 'pry'
 
 describe GameConfig do
   let(:io) { FakeIO.new }
-  let(:console){ Console.new(io) }
+  let(:console){ ConsoleMessagesPresenter.new(io) }
   let(:game) {GameConfig.new(console)}
 
   context 'Board size agnostic' do

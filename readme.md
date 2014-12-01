@@ -9,10 +9,6 @@ Separate Main methods and test
 
 Use FakeIO to run through whole game
 
-Change  BoardIO => ConsoleIO
-        Display => ConsoleBoardPresenter
-        Console => ConsolePresenter
-
 Clean-up default parameters on methods
 	Update rspec let statements
 	Refactor with instance variables if necessary
