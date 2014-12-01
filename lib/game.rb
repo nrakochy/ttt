@@ -4,10 +4,13 @@ require_relative 'console_board_presenter'
 require_relative 'human_player'
 require_relative 'easy_ai_player'
 require_relative 'hard_ai_player'
-require_relative 'board_io'
+require_relative 'console_io'
+require_relative 'console_messages_presenter'
 require_relative 'board'
 
 class Game
+
+  CUSTOMIZE = 'CUSTOMIZE'
 
   def setup_and_play_ttt
     io = initialize_io_setup
@@ -28,6 +31,10 @@ class Game
       move_count.even? ? player = player1 : player = player2
       move = player.make_move
       io.move_choice(move)
+      while !valid_move?(move, board)
+        io.already_taken
+        move = player.make_move
+      end
       board.apply_move_to_board(move, player.player_symbol)
       present_board_to_console(board)
       move_count = game_rules.board.find_move_count
@@ -43,7 +50,7 @@ class Game
   end
 
   def initialize_io_setup
-    Console.new(BoardIO.new)
+    ConsoleMessagesPresenter.new
   end
 
   def setup_game_logic_with_board(io)
@@ -65,7 +72,7 @@ class Game
   end
 
   def setup_board_and_rules_with_mode_choice(mode_choice, game_config)
-    if mode_choice  == 'CUSTOMIZE'
+    if mode_choice  == CUSTOMIZE
       board_size = game_config.choose_board_size_height
       board = Board.new(board_size)
       game_rules = GameRules.new(board)
@@ -75,5 +82,10 @@ class Game
     end
     game_rules
   end
+
+  def valid_move?(move, board)
+    board.find_open_spaces.include?(move)
+  end
+
 end
 

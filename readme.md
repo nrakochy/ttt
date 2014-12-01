@@ -1,9 +1,10 @@
+#Ruby Tic Tac Toe with Negamax
 An implementation of Tic Tac Toe in Ruby with Negamax in the HardAI Player
 
-To run -
+##To Run
     ruby lib/main.rb once you have all of the files
 
-To-Do
+##To-Do
 
 Separate Main methods and test
 

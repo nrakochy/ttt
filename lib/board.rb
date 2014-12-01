@@ -43,7 +43,7 @@ class Board
     @move_count = @game_board.count - @open_spaces.count
   end
 
-  def preload_game_board_spaces input
+  def preload_game_board_spaces(input)
     @game_board = input
     find_open_spaces
     find_move_count

@@ -2,23 +2,23 @@ require 'pry'
 require_relative 'visual_rep'
 class ConsoleBoardPresenter
 
-  def non_terminating_row_space_less_than_ten_width space
+  def non_terminating_row_space_less_than_ten_width(space)
     "  " + "#{space.visual_symbol} " + "  " + "|"
   end
 
-  def terminating_row_space_less_than_ten_width space
+  def terminating_row_space_less_than_ten_width(space)
     "  " + "#{space.visual_symbol} " + "  \n"
   end
 
-  def non_terminating_row_space_more_than_ten_width space
+  def non_terminating_row_space_more_than_ten_width(space)
      "  " + "#{space.visual_symbol}" + "  " + "|"
   end
 
-  def terminating_row_space_more_than_ten_width space
+  def terminating_row_space_more_than_ten_width(space)
      "  " + "#{space.visual_symbol}" + "  \n"
   end
 
-  def add_non_terminating_row_space row_space
+  def add_non_terminating_row_space(row_space)
     if row_space.visual_symbol.to_s.length <  2
       non_terminating_row_space_less_than_ten_width(row_space)
     else
@@ -26,7 +26,7 @@ class ConsoleBoardPresenter
     end
   end
 
-  def add_terminating_row_space row_space
+  def add_terminating_row_space(row_space)
     if row_space.visual_symbol.to_s.length <  2
       terminating_row_space_less_than_ten_width(row_space)
     else
@@ -34,22 +34,22 @@ class ConsoleBoardPresenter
     end
   end
 
-  def horizontal_line width
+  def horizontal_line(width)
     display = []
     (width * 7).times{|horizontal| display << "_"}
     display << "\n"
     return_string(display)
   end
 
-  def return_string display
+  def return_string(display)
     display.inject(""){|sum, string| sum += string}
   end
 
-  def row_builder board, width
+  def row_builder(board, width)
     board.slice(0, width)
   end
 
-  def create_display_row row_spaces
+  def create_display_row(row_spaces)
     display = []
     last_space = row_spaces.pop
     row_spaces.each{|row_space| display << add_non_terminating_row_space(row_space)}

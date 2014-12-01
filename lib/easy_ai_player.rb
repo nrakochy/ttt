@@ -1,7 +1,7 @@
 class EasyAIPlayer
   attr_reader :player_symbol
 
-  def initialize game_rules, player_symbol
+  def initialize(game_rules, player_symbol)
       @player_symbol = player_symbol
       @board = game_rules.board
   end

@@ -1,8 +1,7 @@
 require_relative '../lib/console_io'
-
 class ConsoleMessagesPresenter
 
-  def initialize(io = ConsoleIO.new)
+  def initialize io = ConsoleIO.new
     @io = io
   end
 
@@ -31,7 +30,7 @@ class ConsoleMessagesPresenter
     @io.print_output("Please choose your opponent:\n
     Enter 1 for easy computer\n
     Enter 2 for hard computer\n
-    Enter 3 to play against your friend who is sitting next to you.")
+    Enter anything else to play against your friend who is sitting next to you.")
   end
 
   def move_choice(move)
