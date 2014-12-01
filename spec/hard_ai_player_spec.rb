@@ -3,11 +3,12 @@ require_relative '../lib/game_rules'
 require_relative '../lib/board'
 
 describe HardAIPlayer do
+  let(:ai_player_symbol){ "O" }
   let(:rules_with_full_board){ GameRules.new(@full_board) }
   let(:rules_with_empty_board){ GameRules.new(empty_board)}
-  let(:hard_ai_with_full_board){ HardAIPlayer.new(rules_with_full_board) }
+  let(:hard_ai_with_full_board){ HardAIPlayer.new(rules_with_full_board, ai_player_symbol) }
   let(:empty_board){ Board.new }
-  let(:hard_ai_with_empty_board) { HardAIPlayer.new(rules_with_empty_board) }
+  let(:hard_ai_with_empty_board) { HardAIPlayer.new(rules_with_empty_board, ai_player_symbol) }
 
   describe 'negamax helper methods' do
     before :each do
@@ -77,7 +78,7 @@ describe HardAIPlayer do
           new_board = empty_board.preload_game_board_spaces(
            ["X", "O", "X", 4, "O", 6, "O", "X", "X"])
           rules_with_preloaded_board = GameRules.new(new_board)
-          ai = HardAIPlayer.new(rules_with_preloaded_board)
+          ai = HardAIPlayer.new(rules_with_preloaded_board, ai_player_symbol)
           expect(ai.create_score_for_each_available_move).to eq( {4 => -1, 6=> 0.0 } )
 
 =begin
@@ -95,7 +96,7 @@ describe HardAIPlayer do
           new_board = empty_board.preload_game_board_spaces(
             ["X", 2, "O", "X", "O", "X", 7, "O", "X"])
           rules_with_preloaded_board = GameRules.new(new_board)
-          ai = HardAIPlayer.new(rules_with_preloaded_board)
+          ai = HardAIPlayer.new(rules_with_preloaded_board, ai_player_symbol)
           expect(ai.create_score_for_each_available_move).to eq({ 2=> 1, 7=> 1  } )
 
 =begin
@@ -115,7 +116,7 @@ describe HardAIPlayer do
         new_board = empty_board.preload_game_board_spaces(
           [1, 2, 3, 4, 5, 6, 7, 8, "X"])
         rules_with_preloaded_board = GameRules.new(new_board)
-        ai = HardAIPlayer.new(rules_with_preloaded_board)
+        ai = HardAIPlayer.new(rules_with_preloaded_board, ai_player_symbol)
         expect(ai.create_score_for_each_available_move).to eq( { 1 => -1.0, 2 => -1.0, 3 => -1.0, 4 => -1.0, 5 => 0.0, 6 => -1.0, 7 => -1.0, 8 => -1.0 })
 
 =begin
@@ -137,7 +138,7 @@ describe HardAIPlayer do
          new_board = empty_board.preload_game_board_spaces(
           ["X", "O", "X", "X", "O", 6, "O", 8, "X"])
         rules_with_preloaded_board = GameRules.new(new_board)
-        ai = HardAIPlayer.new(rules_with_preloaded_board)
+        ai = HardAIPlayer.new(rules_with_preloaded_board, ai_player_symbol)
         expect(ai.make_move).to eq( 8 )
 
 =begin
@@ -155,7 +156,7 @@ describe HardAIPlayer do
          new_board = empty_board.preload_game_board_spaces(
           ["O", "O", "X", "X", "X", 6, "O", 8, "X"])
         rules_with_preloaded_board = GameRules.new(new_board)
-        ai = HardAIPlayer.new(rules_with_preloaded_board)
+        ai = HardAIPlayer.new(rules_with_preloaded_board, ai_player_symbol)
         expect(ai.make_move).to eq( 6 )
 
 =begin
@@ -173,7 +174,7 @@ describe HardAIPlayer do
        new_board = empty_board.preload_game_board_spaces(
           ["X", "O", "X", "O", "X", "X", "O", 8, 9])
         rules_with_preloaded_board = GameRules.new(new_board)
-        ai = HardAIPlayer.new(rules_with_preloaded_board)
+        ai = HardAIPlayer.new(rules_with_preloaded_board, ai_player_symbol)
         expect(ai.make_move).to eq( 9 )
 
 =begin
@@ -191,7 +192,7 @@ describe HardAIPlayer do
        new_board = empty_board.preload_game_board_spaces(
           [1, 2, "X", 4, "O", 6, "X", 8, 9])
         rules_with_preloaded_board = GameRules.new(new_board)
-        ai = HardAIPlayer.new(rules_with_preloaded_board)
+        ai = HardAIPlayer.new(rules_with_preloaded_board, ai_player_symbol)
         expect(ai.make_move).not_to eq( 1 )
         expect(ai.make_move).not_to eq( 9 )
 
@@ -210,7 +211,7 @@ describe HardAIPlayer do
         new_board = empty_board.preload_game_board_spaces(
           [1, 2, 3, 4, 5, 6, 7, 8, "X"])
         rules_with_preloaded_board = GameRules.new(new_board)
-        ai = HardAIPlayer.new(rules_with_preloaded_board)
+        ai = HardAIPlayer.new(rules_with_preloaded_board, ai_player_symbol)
         expect(ai.make_move).to eq( 5 )
 
 =begin

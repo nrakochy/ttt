@@ -12,7 +12,7 @@ class Game
   def setup_and_play_ttt
     io = initialize_io_setup
     game_rules = setup_game_logic_with_board(io)
-    player1 = HumanPlayer.new(game_rules)
+    player1 = HumanPlayer.new(game_rules, game_rules.player1_symbol)
     player2 = choose_opponent(io, game_rules)
     play_ttt(game_rules, player1, player2, io)
     io.game_over
@@ -49,22 +49,22 @@ class Game
   def setup_game_logic_with_board(io)
     game_config = GameConfig.new(io)
     mode_choice = game_config.customize_else_3_in_a_row
-    setup_board_and_rules_with_mode_choice(mode_choice)
+    setup_board_and_rules_with_mode_choice(mode_choice, game_config)
   end
 
 
   def choose_opponent(io, game_rules)
    opponent = GameConfig.new(io).choose_opponent
     if opponent == 1
-      EasyAIPlayer.new(game_rules)
+      EasyAIPlayer.new(game_rules, game_rules.player2_symbol)
     elsif opponent == 2
-      HardAIPlayer.new(game_rules)
+      HardAIPlayer.new(game_rules, game_rules.player2_symbol)
     else
-      HumanPlayer.new(game_rules)
+      HumanPlayer.new(game_rules, game_rules.player2_symbol)
     end
   end
 
-  def setup_board_and_rules_with_mode_choice(mode_choice)
+  def setup_board_and_rules_with_mode_choice(mode_choice, game_config)
     if mode_choice  == 'CUSTOMIZE'
       board_size = game_config.choose_board_size_height
       board = Board.new(board_size)

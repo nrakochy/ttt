@@ -6,10 +6,10 @@ class HardAIPlayer
   ALPHA_NEGATIVE = -999
   BETA_POSITIVE = 999
 
-  def initialize(game_rules)
+  def initialize(game_rules, player_symbol)
     @game_rules = game_rules
     @opponent_symbol = game_rules.player1_symbol
-    @player_symbol = game_rules.player2_symbol
+    @player_symbol = player_symbol
     @current_board =  game_rules.board
   end
 

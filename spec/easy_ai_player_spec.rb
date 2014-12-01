@@ -3,9 +3,10 @@ require_relative '../lib/board'
 require_relative '../lib/game_rules'
 
 describe EasyAIPlayer do
+  let(:ai_player_symbol){ "O" }
   let(:board){ Board.new }
   let(:game_rules){ GameRules.new(board) }
-  let(:player){ EasyAIPlayer.new(game_rules) }
+  let(:player){ EasyAIPlayer.new(game_rules, ai_player_symbol) }
   
   it 'initializes a Player Object with a symbol attribute' do
     expect(player.player_symbol).to eq('O')
