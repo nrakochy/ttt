@@ -1,4 +1,4 @@
-class BoardIO
+class ConsoleIO
 
   def initialize(input = $stdin, output = $stdout)
     @input = input

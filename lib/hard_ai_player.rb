@@ -18,11 +18,12 @@ class HardAIPlayer
     get_next_best_move(scores)
   end
 
-  def get_next_best_move scores_hash
+  def get_next_best_move(scores_hash)
     scores_hash.max_by{|space, value| value}[0]
   end
 
-  def create_score_for_each_available_move(scores = {})
+  def create_score_for_each_available_move
+    scores = {}
     @current_board.find_open_spaces.each do |move|
       @current_board.apply_move_to_board(move, player_symbol)
       scores[move] = -negamax_with_alpha_beta_pruning(
@@ -53,8 +54,8 @@ class HardAIPlayer
   def negamax_with_alpha_beta_pruning(board, alpha, beta)
     return score_board_state if game_over?
     score = ALPHA_NEGATIVE
-    board.open_spaces.each do |move|
-      if board.open_spaces.count.even?
+    board.find_open_spaces.each do |move|
+      if board.find_open_spaces.count.even?
         board.apply_move_to_board(move, player_symbol)
       else
         board.apply_move_to_board(move, opponent_symbol)

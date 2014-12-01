@@ -1,7 +1,7 @@
-require_relative '../lib/board_io'
+require_relative '../lib/console_io'
 class Console
 
-  def initialize io = BoardIO.new
+  def initialize io = ConsoleIO.new
     @io = io
   end
 

@@ -1,7 +1,7 @@
-require_relative '../lib/board_io'
+require_relative '../lib/console_io'
 require_relative '../lib/fake_io'
 
-describe BoardIO do
+describe ConsoleIO do
   let(:io) { FakeIO.new }
 
   it 'gets input from the user' do
