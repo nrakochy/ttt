@@ -6,7 +6,6 @@ An implementation of Tic Tac Toe in Ruby with Negamax in the HardAI Player
 
 ##To-Do
 
-* Use FakeIO to run through whole game
 * Update rspec let statements
-* Refactor with instance variables if necessary
+* Refactor with instance variables in rspec if necessary
 
