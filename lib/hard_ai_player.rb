@@ -49,17 +49,18 @@ class HardAIPlayer
     @game_rules.winner_on_the_board?
   end
 
+  def find_current_player_symbol
+    board.find_open_spaces.count.even? ? player_symbol : opponent_symbol
+  end
+
   private
 
   def negamax_with_alpha_beta_pruning(board, alpha, beta)
     return score_board_state if game_over?
     score = ALPHA_NEGATIVE
     board.find_open_spaces.each do |move|
-      if board.find_open_spaces.count.even?
-        board.apply_move_to_board(move, player_symbol)
-      else
-        board.apply_move_to_board(move, opponent_symbol)
-      end
+      current_player_symbol = find_current_player_symbol
+      board.apply_move_to_board(move, current_player_symbol)
       score = [score, -negamax_with_alpha_beta_pruning(board, -beta, -alpha)].max
       board.undo_move(move)
       alpha = score if score > alpha
